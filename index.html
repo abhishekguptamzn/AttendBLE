@@ -1,0 +1,1514 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CityPulse — City Super App Prototype</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+--primary:#0066CC;--primary-light:#E8F2FF;--primary-dark:#004C99;
+--secondary:#00C853;--secondary-light:#E8FFF0;
+--accent:#FF6D00;--accent-light:#FFF3E0;
+--error:#FF1744;--error-light:#FFEBEE;
+--warning:#FFB300;--warning-light:#FFF8E1;
+--info:#00A8E8;--info-light:#E0F7FA;
+--bg:#F5F7FA;--surface:#FFFFFF;--text-primary:#1A1A2E;--text-secondary:#6B7280;--text-muted:#9CA3AF;
+--border:#E5E7EB;--shadow:0 2px 12px rgba(0,0,0,0.08);
+--radius:16px;--radius-sm:10px;--radius-xs:8px;
+}
+body{font-family:'Inter','Noto Sans',sans-serif;background:linear-gradient(135deg,#0f172a 0%,#1e293b 50%,#0f172a 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.phone-frame{width:390px;height:844px;background:#000;border-radius:50px;padding:12px;position:relative;box-shadow:0 0 0 2px #333,0 0 0 4px #1a1a1a,0 25px 80px rgba(0,0,0,0.6),0 0 120px rgba(0,102,204,0.15)}
+.phone-screen{width:100%;height:100%;border-radius:40px;overflow:hidden;position:relative;background:var(--bg)}
+.phone-notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:40px;height:34px;background:#000;border-radius:0 0 24px 24px;z-index:1000}
+.phone-notch::before{content:'';position:absolute;top:10px;left:50%;transform:translateX(-50%);width:25px;height:6px;background:#1a1a1a;border-radius:3px}
+.status-bar{position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 28px 8px;z-index:999;font-size:12px;font-weight:600;color:var(--text-primary)}
+.screen{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;transition:transform .35s cubic-bezier(.4,0,.2,1),opacity .35s ease;will-change:transform,opacity;scrollbar-width:none}
+.screen::-webkit-scrollbar{display:none}
+.screen.active{transform:translateX(0);opacity:1;pointer-events:all}
+.screen.left{transform:translateX(-100%);opacity:0;pointer-events:none}
+.screen.right{transform:translateX(100%);opacity:0;pointer-events:none}
+.screen.up{transform:translateY(-100%);opacity:0;pointer-events:none}
+.screen.down{transform:translateY(100%);opacity:0;pointer-events:none}
+.tab-bar{position:absolute;bottom:0;left:0;right:0;height:85px;background:var(--surface);border-top:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-around;padding-top:10px;z-index:900;border-radius:0 0 40px 40px}
+.tab-item{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;transition:all .2s;-webkit-user-select:none;user-select:none}
+.tab-item i{font-size:20px;color:var(--text-muted);transition:all .2s}
+.tab-item span{font-size:10px;font-weight:500;color:var(--text-muted);transition:all .2s}
+.tab-item.active i{color:var(--primary)}
+.tab-item.active span{color:var(--primary);font-weight:600}
+.fab{position:absolute;bottom:100px;right:20px;width:56px;height:56px;background:linear-gradient(135deg,var(--primary),#3399FF);border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:950;cursor:pointer;box-shadow:0 4px 20px rgba(0,102,204,0.4);transition:all .2s}
+.fab:hover{transform:scale(1.08);box-shadow:0 6px 28px rgba(0,102,204,0.5)}
+.fab:active{transform:scale(0.95)}
+.fab i{color:#fff;font-size:22px}
+.quick-action{display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;transition:all .15s}
+.quick-action:active{transform:scale(0.92)}
+.quick-action .icon-wrap{width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:22px;transition:all .2s}
+.quick-action span{font-size:11px;font-weight:500;color:var(--text-secondary);text-align:center;line-height:1.2}
+.card{background:var(--surface);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
+.btn{padding:14px 24px;border-radius:var(--radius-sm);font-size:15px;font-weight:600;border:none;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn:active{transform:scale(0.97)}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:hover{background:var(--primary-dark)}
+.btn-secondary{background:var(--primary-light);color:var(--primary)}
+.btn-outline{background:transparent;border:1.5px solid var(--border);color:var(--text-primary)}
+.btn-block{width:100%}
+.input-field{width:100%;padding:14px 16px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:15px;font-family:inherit;background:var(--surface);color:var(--text-primary);transition:border-color .2s;outline:none}
+.input-field:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(0,102,204,0.1)}
+.input-field::placeholder{color:var(--text-muted)}
+.badge{display:inline-flex;align-items:center;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600}
+.pulse-dot{width:8px;height:8px;border-radius:50%;background:var(--secondary);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.5)}}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideInRight{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+@keyframes scaleIn{from{opacity:0;transform:scale(0.8)}to{opacity:1;transform:scale(1)}}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+.animate-in{animation:fadeInUp .5s ease both}
+.animate-in-1{animation-delay:.1s}.animate-in-2{animation-delay:.2s}.animate-in-3{animation-delay:.3s}.animate-in-4{animation-delay:.4s}.animate-in-5{animation-delay:.5s}
+.screen-label{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.7);backdrop-filter:blur(10px);color:#fff;padding:8px 20px;border-radius:30px;font-size:13px;font-weight:500;z-index:2000;pointer-events:none;opacity:0;transition:opacity .3s}
+.screen-label.show{opacity:1}
+.nav-back{position:absolute;top:56px;left:16px;width:36px;height:36px;background:var(--surface);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:100;box-shadow:var(--shadow);border:none;transition:all .15s}
+.nav-back:active{transform:scale(0.9)}
+.nav-title{position:absolute;top:58px;left:60px;right:16px;font-size:17px;font-weight:700;color:var(--text-primary);z-index:100}
+.progress-bar{height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--primary),#3399FF);border-radius:2px;transition:width .4s ease}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:20px;font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;border:1.5px solid var(--border);background:var(--surface);color:var(--text-secondary)}
+.chip.active{background:var(--primary-light);border-color:var(--primary);color:var(--primary)}
+.chip:active{transform:scale(0.95)}
+.skeleton{background:linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:8px}
+.sos-ring{position:absolute;width:140px;height:140px;border-radius:50%;border:3px solid var(--error);opacity:0;animation:sosPulse 2s infinite}
+@keyframes sosPulse{0%{transform:scale(0.8);opacity:.6}100%{transform:scale(1.6);opacity:0}}
+.home-indicator{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:134px;height:5px;background:rgba(0,0,0,0.15);border-radius:3px;z-index:1001}
+@media(max-width:420px){.phone-frame{width:100vw;height:100vh;border-radius:0;padding:0;box-shadow:none}.phone-screen{border-radius:0}.phone-notch{display:none}.status-bar{padding-top:8px;height:48px}.tab-bar{border-radius:0;height:75px}.home-indicator{display:none}}
+</style>
+</head>
+<body>
+
+<div class="screen-label" id="screenLabel"></div>
+
+<!-- Phone Frame -->
+<div class="phone-frame">
+<div class="phone-screen" id="phoneScreen">
+  <div class="phone-notch"></div>
+  <div class="home-indicator"></div>
+
+  <!-- ==================== SPLASH SCREEN ==================== -->
+  <div class="screen active" id="screen-splash" style="background:linear-gradient(135deg,#0066CC 0%,#004C99 50%,#003366 100%);display:flex;flex-direction:column;align-items:center;justify-content:center">
+    <div style="animation:scaleIn .8s ease both">
+      <div style="width:90px;height:90px;background:rgba(255,255,255,0.15);border-radius:24px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;backdrop-filter:blur(10px)">
+        <i class="fas fa-city" style="font-size:40px;color:#fff"></i>
+      </div>
+      <h1 style="font-size:32px;font-weight:800;color:#fff;text-align:center;letter-spacing:-0.5px">CityPulse</h1>
+      <p style="font-size:14px;color:rgba(255,255,255,0.7);text-align:center;margin-top:6px">Your City. One App.</p>
+    </div>
+    <div style="position:absolute;bottom:100px;display:flex;flex-direction:column;align-items:center;gap:12px;animation:fadeInUp 1s ease .5s both">
+      <div class="progress-bar" style="width:120px"><div class="progress-fill" style="width:0%" id="splashProgress"></div></div>
+      <span style="font-size:11px;color:rgba(255,255,255,0.5)">Loading your city...</span>
+    </div>
+  </div>
+
+  <!-- ==================== ONBOARDING 1 ==================== -->
+  <div class="screen right" id="screen-onboarding1" style="background:var(--bg)">
+    <div style="height:54px"></div>
+    <div style="padding:20px 24px;flex:1;display:flex;flex-direction:column">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <button class="btn btn-outline" style="padding:8px 16px;font-size:13px" onclick="navigateTo('screen-login')">Skip</button>
+        <span style="font-size:13px;color:var(--text-muted);font-weight:500">1/3</span>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px 0">
+        <div style="width:240px;height:240px;border-radius:32px;overflow:hidden;margin-bottom:32px;box-shadow:0 12px 40px rgba(0,102,204,0.15)">
+          <img src="https://picsum.photos/seed/citypulse-onb1/480/480" style="width:100%;height:100%;object-fit:cover" alt="City services">
+        </div>
+        <h2 style="font-size:24px;font-weight:800;color:var(--text-primary);margin-bottom:12px;line-height:1.2">All City Services<br>In One Place</h2>
+        <p style="font-size:14px;color:var(--text-secondary);line-height:1.6;max-width:280px">No more downloading 20+ apps. Transport, healthcare, bills, complaints — everything in your pocket.</p>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:center;margin-bottom:20px">
+        <div style="width:24px;height:4px;background:var(--primary);border-radius:2px"></div>
+        <div style="width:8px;height:4px;background:var(--border);border-radius:2px"></div>
+        <div style="width:8px;height:4px;background:var(--border);border-radius:2px"></div>
+      </div>
+      <button class="btn btn-primary btn-block" onclick="navigateTo('screen-onboarding2')">Continue <i class="fas fa-arrow-right" style="font-size:13px"></i></button>
+    </div>
+  </div>
+
+  <!-- ==================== ONBOARDING 2 ==================== -->
+  <div class="screen right" id="screen-onboarding2" style="background:var(--bg)">
+    <div style="height:54px"></div>
+    <div style="padding:20px 24px;flex:1;display:flex;flex-direction:column">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <button class="btn btn-outline" style="padding:8px 16px;font-size:13px" onclick="navigateTo('screen-login')">Skip</button>
+        <span style="font-size:13px;color:var(--text-muted);font-weight:500">2/3</span>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px 0">
+        <div style="width:240px;height:240px;border-radius:32px;overflow:hidden;margin-bottom:32px;box-shadow:0 12px 40px rgba(0,200,83,0.15)">
+          <img src="https://picsum.photos/seed/citypulse-onb2/480/480" style="width:100%;height:100%;object-fit:cover" alt="AI Assistant">
+        </div>
+        <h2 style="font-size:24px;font-weight:800;color:var(--text-primary);margin-bottom:12px;line-height:1.2">AI-Powered<br>City Assistant</h2>
+        <p style="font-size:14px;color:var(--text-secondary);line-height:1.6;max-width:280px">Ask anything in your language. Get personalized recommendations, real-time alerts, and smart predictions.</p>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:center;margin-bottom:20px">
+        <div style="width:8px;height:4px;background:var(--border);border-radius:2px"></div>
+        <div style="width:24px;height:4px;background:var(--primary);border-radius:2px"></div>
+        <div style="width:8px;height:4px;background:var(--border);border-radius:2px"></div>
+      </div>
+      <button class="btn btn-primary btn-block" onclick="navigateTo('screen-onboarding3')">Continue <i class="fas fa-arrow-right" style="font-size:13px"></i></button>
+    </div>
+  </div>
+
+  <!-- ==================== ONBOARDING 3 ==================== -->
+  <div class="screen right" id="screen-onboarding3" style="background:var(--bg)">
+    <div style="height:54px"></div>
+    <div style="padding:20px 24px;flex:1;display:flex;flex-direction:column">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <button class="btn btn-outline" style="padding:8px 16px;font-size:13px" onclick="navigateTo('screen-login')">Skip</button>
+        <span style="font-size:13px;color:var(--text-muted);font-weight:500">3/3</span>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px 0">
+        <div style="width:240px;height:240px;border-radius:32px;overflow:hidden;margin-bottom:32px;box-shadow:0 12px 40px rgba(255,109,0,0.15)">
+          <img src="https://picsum.photos/seed/citypulse-onb3/480/480" style="width:100%;height:100%;object-fit:cover" alt="Community">
+        </div>
+        <h2 style="font-size:24px;font-weight:800;color:var(--text-primary);margin-bottom:12px;line-height:1.2">Your Community<br>Connected</h2>
+        <p style="font-size:14px;color:var(--text-secondary);line-height:1.6;max-width:280px">Join neighborhood forums, report issues, volunteer, and stay connected with your city like never before.</p>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:center;margin-bottom:20px">
+        <div style="width:8px;height:4px;background:var(--border);border-radius:2px"></div>
+        <div style="width:8px;height:4px;background:var(--border);border-radius:2px"></div>
+        <div style="width:24px;height:4px;background:var(--primary);border-radius:2px"></div>
+      </div>
+      <button class="btn btn-primary btn-block" onclick="navigateTo('screen-login')">Get Started <i class="fas fa-arrow-right" style="font-size:13px"></i></button>
+    </div>
+  </div>
+
+  <!-- ==================== LOGIN SCREEN ==================== -->
+  <div class="screen right" id="screen-login" style="background:var(--bg)">
+    <div style="height:54px"></div>
+    <div style="padding:20px 24px">
+      <div style="margin-bottom:32px;margin-top:20px">
+        <div style="width:56px;height:56px;background:linear-gradient(135deg,var(--primary),#3399FF);border-radius:16px;display:flex;align-items:center;justify-content:center;margin-bottom:20px">
+          <i class="fas fa-city" style="font-size:24px;color:#fff"></i>
+        </div>
+        <h1 style="font-size:28px;font-weight:800;color:var(--text-primary);margin-bottom:6px">Welcome Back</h1>
+        <p style="font-size:14px;color:var(--text-secondary)">Sign in to access your city</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:24px">
+        <div>
+          <label style="font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:6px;display:block">Mobile Number</label>
+          <div style="display:flex;gap:8px">
+            <div style="display:flex;align-items:center;gap:6px;padding:14px 12px;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:14px;font-weight:500;color:var(--text-primary);white-space:nowrap">
+              <img src="https://flagcdn.com/w40/in.png" style="width:20px;height:14px;border-radius:2px" alt="IN"> +91
+            </div>
+            <input type="tel" class="input-field" placeholder="Enter mobile number" maxlength="10" value="98765 43210">
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-primary btn-block" style="margin-bottom:20px" onclick="navigateTo('screen-otp')">Send OTP <i class="fas fa-arrow-right" style="font-size:13px"></i></button>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px">
+        <div style="flex:1;height:1px;background:var(--border)"></div>
+        <span style="font-size:12px;color:var(--text-muted);font-weight:500">OR CONTINUE WITH</span>
+        <div style="flex:1;height:1px;background:var(--border)"></div>
+      </div>
+      <div style="display:flex;gap:12px;margin-bottom:24px">
+        <button class="btn btn-outline" style="flex:1;padding:12px"><i class="fab fa-google" style="font-size:18px;color:#EA4335"></i></button>
+        <button class="btn btn-outline" style="flex:1;padding:12px"><i class="fab fa-apple" style="font-size:18px;color:#000"></i></button>
+        <button class="btn btn-outline" style="flex:1;padding:12px"><i class="fas fa-fingerprint" style="font-size:18px;color:var(--primary)"></i></button>
+      </div>
+      <p style="text-align:center;font-size:12px;color:var(--text-muted);line-height:1.5">By continuing, you agree to our <span style="color:var(--primary);font-weight:500">Terms</span> & <span style="color:var(--primary);font-weight:500">Privacy Policy</span></p>
+    </div>
+  </div>
+
+  <!-- ==================== OTP SCREEN ==================== -->
+  <div class="screen right" id="screen-otp" style="background:var(--bg)">
+    <button class="nav-back" onclick="navigateTo('screen-login')"><i class="fas fa-arrow-left" style="font-size:14px;color:var(--text-primary)"></i></button>
+    <div style="padding:20px 24px;padding-top:80px">
+      <h1 style="font-size:24px;font-weight:800;color:var(--text-primary);margin-bottom:6px">Verify OTP</h1>
+      <p style="font-size:14px;color:var(--text-secondary);margin-bottom:32px">Sent to +91 98765 43210</p>
+      <div style="display:flex;gap:12px;justify-content:center;margin-bottom:32px" id="otpContainer">
+        <input type="text" maxlength="1" class="otp-input" style="width:52px;height:60px;text-align:center;font-size:24px;font-weight:700;border:2px solid var(--border);border-radius:14px;background:var(--surface);color:var(--text-primary);outline:none;font-family:inherit" value="4">
+        <input type="text" maxlength="1" class="otp-input" style="width:52px;height:60px;text-align:center;font-size:24px;font-weight:700;border:2px solid var(--primary);border-radius:14px;background:var(--primary-light);color:var(--text-primary);outline:none;font-family:inherit" value="8">
+        <input type="text" maxlength="1" class="otp-input" style="width:52px;height:60px;text-align:center;font-size:24px;font-weight:700;border:2px solid var(--border);border-radius:14px;background:var(--surface);color:var(--text-primary);outline:none;font-family:inherit" value="2">
+        <input type="text" maxlength="1" class="otp-input" style="width:52px;height:60px;text-align:center;font-size:24px;font-weight:700;border:2px solid var(--border);border-radius:14px;background:var(--surface);color:var(--text-primary);outline:none;font-family:inherit" value="1">
+      </div>
+      <div style="text-align:center;margin-bottom:32px">
+        <span style="font-size:13px;color:var(--text-muted)">Resend OTP in </span>
+        <span style="font-size:13px;color:var(--primary);font-weight:600" id="otpTimer">00:28</span>
+      </div>
+      <button class="btn btn-primary btn-block" style="margin-bottom:16px" onclick="navigateTo('screen-profile-setup')">Verify & Continue</button>
+      <button class="btn btn-outline btn-block" style="font-size:13px;padding:12px">Change Number</button>
+    </div>
+  </div>
+
+  <!-- ==================== PROFILE SETUP ==================== -->
+  <div class="screen right" id="screen-profile-setup" style="background:var(--bg)">
+    <button class="nav-back" onclick="navigateTo('screen-otp')"><i class="fas fa-arrow-left" style="font-size:14px;color:var(--text-primary)"></i></button>
+    <div class="nav-title">Complete Profile</div>
+    <div style="padding:80px 24px 24px">
+      <div style="display:flex;justify-content:center;margin-bottom:24px">
+        <div style="position:relative;cursor:pointer">
+          <div style="width:88px;height:88px;border-radius:50%;background:linear-gradient(135deg,var(--primary-light),#d0e8ff);display:flex;align-items:center;justify-content:center">
+            <img src="https://picsum.photos/seed/avatar-priya/200/200" style="width:80px;height:80px;border-radius:50%;object-fit:cover" alt="Profile">
+          </div>
+          <div style="position:absolute;bottom:-2px;right:-2px;width:30px;height:30px;background:var(--primary);border-radius:50%;display:flex;align-items:center;justify-content:center;border:3px solid var(--bg)">
+            <i class="fas fa-camera" style="font-size:11px;color:#fff"></i>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:24px">
+        <div>
+          <label style="font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:6px;display:block">Full Name</label>
+          <input type="text" class="input-field" placeholder="Enter your name" value="Priya Sharma">
+        </div>
+        <div>
+          <label style="font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:6px;display:block">Email</label>
+          <input type="email" class="input-field" placeholder="Enter email" value="priya.sharma@email.com">
+        </div>
+        <div>
+          <label style="font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:6px;display:block">Select City</label>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-sm);cursor:pointer">
+            <div style="display:flex;align-items:center;gap:10px">
+              <i class="fas fa-map-marker-alt" style="color:var(--primary)"></i>
+              <span style="font-size:15px;color:var(--text-primary);font-weight:500">Mumbai, Maharashtra</span>
+            </div>
+            <i class="fas fa-chevron-down" style="font-size:12px;color:var(--text-muted)"></i>
+          </div>
+        </div>
+        <div>
+          <label style="font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:6px;display:block">Preferred Language</label>
+          <div style="display:flex;flex-wrap:wrap;gap:8px">
+            <span class="chip active">English</span>
+            <span class="chip">हिंदी</span>
+            <span class="chip">मराठी</span>
+            <span class="chip">தமிழ்</span>
+            <span class="chip">తెలుగు</span>
+          </div>
+        </div>
+        <div>
+          <label style="font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:6px;display:block">I am a</label>
+          <div style="display:flex;flex-wrap:wrap;gap:8px">
+            <span class="chip active"><i class="fas fa-briefcase" style="font-size:11px"></i> Working Professional</span>
+            <span class="chip"><i class="fas fa-graduation-cap" style="font-size:11px"></i> Student</span>
+            <span class="chip"><i class="fas fa-home" style="font-size:11px"></i> Homemaker</span>
+            <span class="chip"><i class="fas fa-store" style="font-size:11px"></i> Business Owner</span>
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-primary btn-block" onclick="navigateTo('screen-home')">Complete Setup <i class="fas fa-check" style="font-size:13px"></i></button>
+    </div>
+  </div>
+
+  <!-- ==================== HOME DASHBOARD ==================== -->
+  <div class="screen right" id="screen-home" style="background:var(--bg);padding-bottom:85px">
+    <div class="status-bar" style="background:linear-gradient(135deg,var(--primary),#004C99)">
+      <span style="color:#fff">9:41</span>
+      <div style="display:flex;gap:6px;align-items:center">
+        <i class="fas fa-signal" style="font-size:11px;color:#fff"></i>
+        <i class="fas fa-wifi" style="font-size:11px;color:#fff"></i>
+        <i class="fas fa-battery-full" style="font-size:13px;color:#fff"></i>
+      </div>
+    </div>
+    <!-- Header -->
+    <div style="background:linear-gradient(135deg,var(--primary),#004C99);padding:54px 20px 24px;border-radius:0 0 28px 28px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <div>
+          <p style="font-size:13px;color:rgba(255,255,255,0.7);margin-bottom:2px">Good Morning</p>
+          <h1 style="font-size:22px;font-weight:800;color:#fff">Priya Sharma</h1>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center">
+          <div style="width:40px;height:40px;background:rgba(255,255,255,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative" onclick="navigateTo('screen-notifications')">
+            <i class="fas fa-bell" style="font-size:16px;color:#fff"></i>
+            <div style="position:absolute;top:2px;right:2px;width:8px;height:8px;background:var(--error);border-radius:50%;border:2px solid var(--primary)"></div>
+          </div>
+          <div style="width:40px;height:40px;border-radius:50%;overflow:hidden;border:2px solid rgba(255,255,255,0.3);cursor:pointer" onclick="navigateTo('screen-profile')">
+            <img src="https://picsum.photos/seed/avatar-priya/80/80" style="width:100%;height:100%;object-fit:cover" alt="Avatar">
+          </div>
+        </div>
+      </div>
+      <!-- City Pulse Bar -->
+      <div style="display:flex;gap:10px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none">
+        <div style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.12);padding:8px 12px;border-radius:20px;white-space:nowrap;backdrop-filter:blur(10px)">
+          <i class="fas fa-cloud-sun" style="font-size:13px;color:#FFD54F"></i>
+          <span style="font-size:12px;color:#fff;font-weight:500">32°C Partly Cloudy</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.12);padding:8px 12px;border-radius:20px;white-space:nowrap">
+          <div style="width:8px;height:8px;border-radius:50%;background:var(--warning)"></div>
+          <span style="font-size:12px;color:#fff;font-weight:500">AQI 156 Moderate</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.12);padding:8px 12px;border-radius:20px;white-space:nowrap">
+          <i class="fas fa-traffic-light" style="font-size:13px;color:#FF8A65"></i>
+          <span style="font-size:12px;color:#fff;font-weight:500">Heavy Traffic</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="padding:16px 20px">
+      <!-- Search Bar -->
+      <div class="card animate-in" style="display:flex;align-items:center;gap:12px;padding:12px 16px;margin-bottom:16px;cursor:pointer" onclick="navigateTo('screen-ai-assistant')">
+        <i class="fas fa-magnifying-glass" style="color:var(--text-muted);font-size:15px"></i>
+        <span style="color:var(--text-muted);font-size:14px;flex:1">Search services, places, info...</span>
+        <div style="display:flex;align-items:center;gap:4px;background:var(--primary-light);padding:4px 10px;border-radius:12px">
+          <i class="fas fa-wand-magic-sparkles" style="font-size:10px;color:var(--primary)"></i>
+          <span style="font-size:11px;color:var(--primary);font-weight:600">AI</span>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="animate-in animate-in-1" style="margin-bottom:20px">
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
+          <div class="quick-action" onclick="navigateTo('screen-transport')">
+            <div class="icon-wrap" style="background:var(--primary-light)"><i class="fas fa-bus" style="color:var(--primary)"></i></div>
+            <span>Transport</span>
+          </div>
+          <div class="quick-action" onclick="navigateTo('screen-healthcare')">
+            <div class="icon-wrap" style="background:var(--error-light)"><i class="fas fa-heart-pulse" style="color:var(--error)"></i></div>
+            <span>Health</span>
+          </div>
+          <div class="quick-action" onclick="navigateTo('screen-sos')">
+            <div class="icon-wrap" style="background:var(--error-light)"><i class="fas fa-shield-heart" style="color:var(--error)"></i></div>
+            <span>SOS</span>
+          </div>
+          <div class="quick-action" onclick="navigateTo('screen-bills')">
+            <div class="icon-wrap" style="background:var(--warning-light)"><i class="fas fa-receipt" style="color:var(--warning)"></i></div>
+            <span>Pay Bills</span>
+          </div>
+          <div class="quick-action" onclick="navigateTo('screen-jobs')">
+            <div class="icon-wrap" style="background:var(--secondary-light)"><i class="fas fa-briefcase" style="color:var(--secondary)"></i></div>
+            <span>Jobs</span>
+          </div>
+          <div class="quick-action" onclick="navigateTo('screen-events')">
+            <div class="icon-wrap" style="background:var(--accent-light)"><i class="fas fa-calendar-star" style="color:var(--accent)"></i></div>
+            <span>Events</span>
+          </div>
+          <div class="quick-action" onclick="navigateTo('screen-govt-services')">
+            <div class="icon-wrap" style="background:var(--info-light)"><i class="fas fa-landmark" style="color:var(--info)"></i></div>
+            <span>Services</span>
+          </div>
+          <div class="quick-action" onclick="navigateTo('screen-community')">
+            <div class="icon-wrap" style="background:#F3E8FF"><i class="fas fa-people-group" style="color:#7C3AED"></i></div>
+            <span>Community</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Smart Alerts -->
+      <div class="animate-in animate-in-2" style="margin-bottom:20px">
+        <div class="card" style="padding:14px 16px;display:flex;align-items:center;gap:12px;border-left:4px solid var(--warning)">
+          <div style="width:40px;height:40px;background:var(--warning-light);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <i class="fas fa-triangle-exclamation" style="color:var(--warning);font-size:16px"></i>
+          </div>
+          <div style="flex:1;min-width:0">
+            <p style="font-size:13px;font-weight:600;color:var(--text-primary)">Water Supply Disruption</p>
+            <p style="font-size:12px;color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Area: Andheri West — 10 AM to 6 PM today</p>
+          </div>
+          <i class="fas fa-chevron-right" style="font-size:12px;color:var(--text-muted)"></i>
+        </div>
+      </div>
+
+      <!-- Digital Citizen Card -->
+      <div class="animate-in animate-in-3" style="margin-bottom:20px;cursor:pointer" onclick="navigateTo('screen-citizen-card')">
+        <div style="background:linear-gradient(135deg,#1A1A2E 0%,#2D2D5E 100%);border-radius:var(--radius);padding:18px;position:relative;overflow:hidden">
+          <div style="position:absolute;top:-20px;right:-20px;width:100px;height:100px;background:rgba(255,255,255,0.05);border-radius:50%"></div>
+          <div style="position:absolute;bottom:-30px;right:30px;width:80px;height:80px;background:rgba(255,255,255,0.03);border-radius:50%"></div>
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;position:relative;z-index:1">
+            <div>
+              <p style="font-size:11px;color:rgba(255,255,255,0.5);font-weight:500;text-transform:uppercase;letter-spacing:1px">Digital Citizen Card</p>
+              <p style="font-size:18px;font-weight:700;color:#fff;margin-top:4px">Priya Sharma</p>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+              <div style="width:36px;height:36px;background:rgba(255,255,255,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center">
+                <i class="fas fa-qrcode" style="font-size:18px;color:#fff"></i>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;position:relative;z-index:1">
+            <div><p style="font-size:10px;color:rgba(255,255,255,0.4)">ID</p><p style="font-size:12px;color:rgba(255,255,255,0.8);font-weight:500">MUM-2024-0084721</p></div>
+            <div><p style="font-size:10px;color:rgba(255,255,255,0.4)">City</p><p style="font-size:12px;color:rgba(255,255,255,0.8);font-weight:500">Mumbai</p></div>
+            <div><p style="font-size:10px;color:rgba(255,255,255,0.4)">Status</p><div style="display:flex;align-items:center;gap:4px"><div class="pulse-dot" style="width:6px;height:6px"></div><p style="font-size:12px;color:var(--secondary);font-weight:500">Verified</p></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- For You Section -->
+      <div class="animate-in animate-in-4" style="margin-bottom:20px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <h2 style="font-size:17px;font-weight:700;color:var(--text-primary)">For You</h2>
+          <span style="font-size:13px;color:var(--primary);font-weight:500;cursor:pointer">See All</span>
+        </div>
+        <div style="display:flex;gap:12px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none">
+          <div class="card" style="min-width:200px;padding:0;overflow:hidden;cursor:pointer" onclick="navigateTo('screen-events')">
+            <img src="https://picsum.photos/seed/event-music/400/200" style="width:100%;height:110px;object-fit:cover" alt="Event">
+            <div style="padding:12px">
+              <div class="badge" style="background:var(--accent-light);color:var(--accent);margin-bottom:6px"><i class="fas fa-music" style="font-size:9px"></i> Music</div>
+              <p style="font-size:14px;font-weight:600;color:var(--text-primary);line-height:1.3">Mumbai Jazz Festival 2026</p>
+              <p style="font-size:12px;color:var(--text-secondary);margin-top:4px"><i class="fas fa-calendar" style="margin-right:4px"></i>Jun 28 · Bandra Fort</p>
+            </div>
+          </div>
+          <div class="card" style="min-width:200px;padding:0;overflow:hidden;cursor:pointer" onclick="navigateTo('screen-events')">
+            <img src="https://picsum.photos/seed/event-food/400/200" style="width:100%;height:110px;object-fit:cover" alt="Event">
+            <div style="padding:12px">
+              <div class="badge" style="background:var(--secondary-light);color:var(--secondary);margin-bottom:6px"><i class="fas fa-utensils" style="font-size:9px"></i> Food</div>
+              <p style="font-size:14px;font-weight:600;color:var(--text-primary);line-height:1.3">Street Food Carnival</p>
+              <p style="font-size:12px;color:var(--text-secondary);margin-top:4px"><i class="fas fa-calendar" style="margin-right:4px"></i>Jul 2 · Juhu Beach</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Nearby Issues -->
+      <div class="animate-in animate-in-5" style="margin-bottom:20px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <h2 style="font-size:17px;font-weight:700;color:var(--text-primary)">Nearby Issues</h2>
+          <span style="font-size:13px;color:var(--primary);font-weight:500;cursor:pointer" onclick="navigateTo('screen-govt-services')">Report Issue</span>
+        </div>
+        <div class="card" style="padding:14px;margin-bottom:10px">
+          <div style="display:flex;gap:12px">
+            <img src="https://picsum.photos/seed/pothole-issue/100/100" style="width:52px;height:52px;border-radius:10px;object-fit:cover" alt="Issue">
+            <div style="flex:1;min-width:0">
+              <div style="display:flex;justify-content:space-between;align-items:start">
+                <p style="font-size:13px;font-weight:600;color:var(--text-primary)">Large Pothole on Link Road</p>
+                <span class="badge" style="background:var(--warning-light);color:var(--warning);flex-shrink:0">In Progress</span>
+              </div>
+              <p style="font-size:12px;color:var(--text-secondary);margin-top:2px">Andheri West · 200m away</p>
+              <div style="display:flex;align-items:center;gap:12px;margin-top:6px">
+                <span style="font-size:11px;color:var(--text-muted)"><i class="fas fa-thumbs-up" style="margin-right:3px"></i>24</span>
+                <span style="font-size:11px;color:var(--text-muted)"><i class="fas fa-comment" style="margin-right:3px"></i>8</span>
+                <span style="font-size:11px;color:var(--text-muted)"><i class="fas fa-clock" style="margin-right:3px"></i>2 days ago</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card" style="padding:14px">
+          <div style="display:flex;gap:12px">
+            <img src="https://picsum.photos/seed/streetlight-issue/100/100" style="width:52px;height:52px;border-radius:10px;object-fit:cover" alt="Issue">
+            <div style="flex:1;min-width:0">
+              <div style="display:flex;justify-content:space-between;align-items:start">
+                <p style="font-size:13px;font-weight:600;color:var(--text-primary)">Broken Streetlight</p>
+                <span class="badge" style="background:var(--error-light);color:var(--error);flex-shrink:0">Open</span>
+              </div>
+              <p style="font-size:12px;color:var(--text-secondary);margin-top:2px">Versova · 500m away</p>
+              <div style="display:flex;align-items:center;gap:12px;margin-top:6px">
+                <span style="font-size:11px;color:var(--text-muted)"><i class="fas fa-thumbs-up" style="margin-right:3px"></i>12</span>
+                <span style="font-size:11px;color:var(--text-muted)"><i class="fas fa-comment" style="margin-right:3px"></i>3</span>
+                <span style="font-size:11px;color:var(--text-muted)"><i class="fas fa-clock" style="margin-right:3px"></i>5 days ago</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Local Deals -->
+      <div style="margin-bottom:20px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <h2 style="font-size:17px;font-weight:700;color:var(--text-primary)">Local Deals</h2>
+          <span style="font-size:13px;color:var(--primary);font-weight:500;cursor:pointer" onclick="navigateTo('screen-shopping')">See All</span>
+        </div>
+        <div style="display:flex;gap:12px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none">
+          <div class="card" style="min-width:150px;padding:0;overflow:hidden;cursor:pointer;text-align:center">
+            <img src="https://picsum.photos/seed/deal-cafe/300/200" style="width:100%;height:90px;object-fit:cover" alt="Deal">
+            <div style="padding:10px">
+              <p style="font-size:13px;font-weight:600;color:var(--text-primary)">Blue Tokai</p>
+              <p style="font-size:18px;font-weight:800;color:var(--error);margin-top:4px">30% OFF</p>
+              <p style="font-size:11px;color:var(--text-muted)">On all coffees</p>
+            </div>
+          </div>
+          <div class="card" style="min-width:150px;padding:0;overflow:hidden;cursor:pointer;text-align:center">
+            <img src="https://picsum.photos/seed/deal-salon/300/200" style="width:100%;height:90px;object-fit:cover" alt="Deal">
+            <div style="padding:10px">
+              <p style="font-size:13px;font-weight:600;color:var(--text-primary)">Truefitt & Hill</p>
+              <p style="font-size:18px;font-weight:800;color:var(--error);margin-top:4px">FLAT ₹500</p>
+              <p style="font-size:11px;color:var(--text-muted)">First visit</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="height:20px"></div>
+    </div>
+
+    <!-- Tab Bar -->
+    <div class="tab-bar" id="mainTabBar">
+      <div class="tab-item active" onclick="switchTab('home')"><i class="fas fa-house"></i><span>Home</span></div>
+      <div class="tab-item" onclick="switchTab('transport')"><i class="fas fa-bus"></i><span>Transit</span></div>
+      <div class="tab-item" onclick="switchTab('services')"><i class="fas fa-grid-2"></i><span>Services</span></div>
+      <div class="tab-item" onclick="switchTab('community')"><i class="fas fa-people-group"></i><span>Community</span></div>
+      <div class="tab-item" onclick="switchTab('profile')"><i class="fas fa-user"></i><span>Profile</span></div>
+    </div>
+    <!-- FAB for AI -->
+    <div class="fab" onclick="navigateTo('screen-ai-assistant')"><i class="fas fa-robot"></i></div>
+  </div>
+
+  <!-- ==================== TRANSPORT SCREEN ==================== -->
+  <div class="screen right" id="screen-transport" style="background:var(--bg);padding-bottom:85px">
+    <div style="height:54px"></div>
+    <div style="padding:16px 20px 0">
+      <h1 style="font-size:24px;font-weight:800;color:var(--text-primary);margin-bottom:16px">Transport</h1>
+      <!-- Route Planner -->
+      <div class="card" style="margin-bottom:16px;padding:14px">
+        <div style="display:flex;gap:12px;align-items:stretch">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:4px 0">
+            <div style="width:10px;height:10px;border-radius:50%;background:var(--secondary);border:2px solid var(--secondary-light)"></div>
+            <div style="width:2px;flex:1;background:var(--border);border:1px dashed var(--text-muted)"></div>
+            <div style="width:10px;height:10px;border-radius:50%;background:var(--error);border:2px solid var(--error-light)"></div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;gap:10px">
+            <input class="input-field" style="padding:10px 12px;font-size:14px" placeholder="From: Current Location" value="Andheri West Station">
+            <input class="input-field" style="padding:10px 12px;font-size:14px" placeholder="To: Where to?" value="Bandra Kurla Complex">
+          </div>
+          <div style="width:40px;background:var(--primary-light);border-radius:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;align-self:center">
+            <i class="fas fa-arrow-right-arrow-left" style="font-size:14px;color:var(--primary)"></i>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-block" style="margin-top:12px;padding:12px">Find Routes</button>
+      </div>
+
+      <!-- Route Options -->
+      <div class="card" style="margin-bottom:12px;border-left:4px solid var(--primary);cursor:pointer">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div style="display:flex;align-items:center;gap:8px">
+            <i class="fas fa-train-subway" style="color:var(--primary);font-size:16px"></i>
+            <span style="font-size:14px;font-weight:700;color:var(--text-primary)">Metro + Walk</span>
+          </div>
+          <span class="badge" style="background:var(--secondary-light);color:var(--secondary)">Fastest</span>
+        </div>
+        <div style="display:flex;gap:16px">
+          <span style="font-size:13px;color:var(--text-secondary)"><i class="fas fa-clock" style="margin-right:4px"></i>28 min</span>
+          <span style="font-size:13px;color:var(--text-secondary)"><i class="fas fa-indian-rupee-sign" style="margin-right:4px"></i>₹40</span>
+          <span style="font-size:13px;color:var(--text-secondary)"><i class="fas fa-shoe-prints" style="margin-right:4px"></i>500m walk</span>
+        </div>
+        <div style="display:flex;gap:4px;margin-top:8px;align-items:center">
+          <div style="height:3px;width:30px;background:var(--primary);border-radius:2px"></div>
+          <i class="fas fa-circle" style="font-size:6px;color:var(--text-muted)"></i>
+          <div style="height:3px;width:60px;background:var(--primary);border-radius:2px"></div>
+          <i class="fas fa-person-walking" style="font-size:11px;color:var(--text-muted)"></i>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:12px;border-left:4px solid var(--accent);cursor:pointer">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div style="display:flex;align-items:center;gap:8px">
+            <i class="fas fa-bus" style="color:var(--accent);font-size:16px"></i>
+            <span style="font-size:14px;font-weight:700;color:var(--text-primary)">Bus 332</span>
+          </div>
+          <span class="badge" style="background:var(--secondary-light);color:var(--secondary)">Cheapest</span>
+        </div>
+        <div style="display:flex;gap:16px">
+          <span style="font-size:13px;color:var(--text-secondary)"><i class="fas fa-clock" style="margin-right:4px"></i>45 min</span>
+          <span style="font-size:13px;color:var(--text-secondary)"><i class="fas fa-indian-rupee-sign" style="margin-right:4px"></i>₹15</span>
+          <span style="font-size:13px;color:var(--text-secondary)"><i class="fas fa-shoe-prints" style="margin-right:4px"></i>200m walk</span>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:20px;border-left:4px solid var(--warning);cursor:pointer">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div style="display:flex;align-items:center;gap:8px">
+            <i class="fas fa-car" style="color:var(--warning);font-size:16px"></i>
+            <span style="font-size:14px;font-weight:700;color:var(--text-primary)">Auto / Taxi</span>
+          </div>
+        </div>
+        <div style="display:flex;gap:16px">
+          <span style="font-size:13px;color:var(--text-secondary)"><i class="fas fa-clock" style="margin-right:4px"></i>35 min</span>
+          <span style="font-size:13px;color:var(--text-secondary)"><i class="fas fa-indian-rupee-sign" style="margin-right:4px"></i>₹120-180</span>
+          <span style="font-size:13px;color:var(--text-secondary)"><i class="fas fa-door-open" style="margin-right:4px"></i>Door to door</span>
+        </div>
+      </div>
+
+      <!-- Live Bus Tracking -->
+      <h2 style="font-size:17px;font-weight:700;color:var(--text-primary);margin-bottom:12px">Live Bus Tracking</h2>
+      <div class="card" style="margin-bottom:12px;display:flex;align-items:center;gap:12px">
+        <div style="width:48px;height:48px;background:var(--primary-light);border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <span style="font-size:16px;font-weight:800;color:var(--primary)">332</span>
+        </div>
+        <div style="flex:1">
+          <p style="font-size:14px;font-weight:600;color:var(--text-primary)">Andheri → Bandra</p>
+          <p style="font-size:12px;color:var(--text-secondary)">Arriving in <span style="color:var(--primary);font-weight:600">3 min</span></p>
+        </div>
+        <div class="pulse-dot"></div>
+      </div>
+      <div class="card" style="margin-bottom:20px;display:flex;align-items:center;gap:12px">
+        <div style="width:48px;height:48px;background:var(--accent-light);border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <span style="font-size:16px;font-weight:800;color:var(--accent)">221</span>
+        </div>
+        <div style="flex:1">
+          <p style="font-size:14px;font-weight:600;color:var(--text-primary)">Andheri → Goregaon</p>
+          <p style="font-size:12px;color:var(--text-secondary)">Arriving in <span style="color:var(--warning);font-weight:600">8 min</span></p>
+        </div>
+        <div class="pulse-dot" style="background:var(--warning)"></div>
+      </div>
+
+      <!-- Metro Map Link -->
+      <div class="card" style="background:linear-gradient(135deg,var(--primary),#004C99);display:flex;align-items:center;gap:14px;cursor:pointer;margin-bottom:20px">
+        <i class="fas fa-train-subway" style="font-size:24px;color:#fff"></i>
+        <div style="flex:1">
+          <p style="font-size:15px;font-weight:700;color:#fff">Mumbai Metro Map</p>
+          <p style="font-size:12px;color:rgba(255,255,255,0.7)">View all 14 lines & stations</p>
+        </div>
+        <i class="fas fa-chevron-right" style="color:rgba(255,255,255,0.5)"></i>
+      </div>
+      <div style="height:20px"></div>
+    </div>
+    <div class="tab-bar">
+      <div class="tab-item" onclick="switchTab('home')"><i class="fas fa-house"></i><span>Home</span></div>
+      <div class="tab-item active" onclick="switchTab('transport')"><i class="fas fa-bus"></i><span>Transit</span></div>
+      <div class="tab-item" onclick="switchTab('services')"><i class="fas fa-grid-2"></i><span>Services</span></div>
+      <div class="tab-item" onclick="switchTab('community')"><i class="fas fa-people-group"></i><span>Community</span></div>
+      <div class="tab-item" onclick="switchTab('profile')"><i class="fas fa-user"></i><span>Profile</span></div>
+    </div>
+  </div>
+
+  <!-- ==================== GOVT SERVICES SCREEN ==================== -->
+  <div class="screen right" id="screen-govt-services" style="background:var(--bg);padding-bottom:85px">
+    <button class="nav-back" onclick="navigateTo('screen-home')"><i class="fas fa-arrow-left" style="font-size:14px;color:var(--text-primary)"></i></button>
+    <div class="nav-title">Government Services</div>
+    <div style="padding:90px 20px 20px">
+      <!-- Grievance Filing CTA -->
+      <div class="card" style="background:linear-gradient(135deg,#FF6D00,#FF8F00);margin-bottom:20px;display:flex;align-items:center;gap:14px;cursor:pointer">
+        <div style="width:48px;height:48px;background:rgba(255,255,255,0.2);border-radius:14px;display:flex;align-items:center;justify-content:center">
+          <i class="fas fa-bullhorn" style="font-size:20px;color:#fff"></i>
+        </div>
+        <div style="flex:1">
+          <p style="font-size:15px;font-weight:700;color:#fff">File a Grievance</p>
+          <p style="font-size:12px;color:rgba(255,255,255,0.8)">Report issues with photo & auto-location</p>
+        </div>
+        <i class="fas fa-chevron-right" style="color:rgba(255,255,255,0.6)"></i>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px">
+        <div class="card" style="display:flex;flex-direction:column;align-items:center;padding:20px 12px;cursor:pointer;gap:10px">
+          <div style="width:50px;height:50px;background:var(--primary-light);border-radius:14px;display:flex;align-items:center;justify-content:center"><i class="fas fa-file-certificate" style="font-size:20px;color:var(--primary)"></i></div>
+          <span style="font-size:13px;font-weight:600;color:var(--text-primary);text-align:center">Certificates</span>
+        </div>
+        <div class="card" style="display:flex;flex-direction:column;align-items:center;padding:20px 12px;cursor:pointer;gap:10px">
+          <div style="width:50px;height:50px;background:var(--error-light);border-radius:14px;display:flex;align-items:center;justify-content:center"><i class="fas fa-file-invoice-dollar" style="font-size:20px;color:var(--error)"></i></div>
+          <span style="font-size:13px;font-weight:600;color:var(--text-primary);text-align:center">Tax Payment</span>
+        </div>
+        <div class="card" style="display:flex;flex-direction:column;align-items:center;padding:20px 12px;cursor:pointer;gap:10px">
+          <div style="width:50px;height:50px;background:var(--secondary-light);border-radius:14px;display:flex;align-items:center;justify-content:center"><i class="fas fa-droplet" style="font-size:20px;color:var(--secondary)"></i></div>
+          <span style="font-size:13px;font-weight:600;color:var(--text-primary);text-align:center">Water Supply</span>
+        </div>
+        <div class="card" style="display:flex;flex-direction:column;align-items:center;padding:20px 12px;cursor:pointer;gap:10px">
+          <div style="width:50px;height:50px;background:var(--warning-light);border-radius:14px;display:flex;align-items:center;justify-content:center"><i class="fas fa-bolt" style="font-size:20px;color:var(--warning)"></i></div>
+          <span style="font-size:13px;font-weight:600;color:var(--text-primary);text-align:center">Electricity</span>
+        </div>
+        <div class="card" style="display:flex;flex-direction:column;align-items:center;padding:20px 12px;cursor:pointer;gap:10px">
+          <div style="width:50px;height:50px;background:var(--info-light);border-radius:14px;display:flex;align-items:center;justify-content:center"><i class="fas fa-building" style="font-size:20px;color:var(--info)"></i></div>
+          <span style="font-size:13px;font-weight:600;color:var(--text-primary);text-align:center">Property</span>
+        </div>
+        <div class="card" style="display:flex;flex-direction:column;align-items:center;padding:20px 12px;cursor:pointer;gap:10px">
+          <div style="width:50px;height:50px;background:#F3E8FF;border-radius:14px;display:flex;align-items:center;justify-content:center"><i class="fas fa-hand-holding-heart" style="font-size:20px;color:#7C3AED"></i></div>
+          <span style="font-size:13px;font-weight:600;color:var(--text-primary);text-align:center">Schemes</span>
+        </div>
+      </div>
+
+      <!-- Active Grievances -->
+      <h2 style="font-size:17px;font-weight:700;color:var(--text-primary);margin-bottom:12px">My Grievances</h2>
+      <div class="card" style="margin-bottom:10px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <span style="font-size:13px;font-weight:600;color:var(--text-primary)">GRV-2024-4521</span>
+          <span class="badge" style="background:var(--warning-light);color:var(--warning)">In Progress</span>
+        </div>
+        <p style="font-size:14px;font-weight:500;color:var(--text-primary);margin-bottom:8px">Garbage not collected for 3 days</p>
+        <div class="progress-bar" style="margin-bottom:6px"><div class="progress-fill" style="width:60%"></div></div>
+        <div style="display:flex;justify-content:space-between">
+          <span style="font-size:11px;color:var(--text-muted)">Filed: Jun 18, 2026</span>
+          <span style="font-size:11px;color:var(--primary);font-weight:500">SLA: 5 days left</span>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:20px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <span style="font-size:13px;font-weight:600;color:var(--text-primary)">GRV-2024-4398</span>
+          <span class="badge" style="background:var(--secondary-light);color:var(--secondary)">Resolved</span>
+        </div>
+        <p style="font-size:14px;font-weight:500;color:var(--text-primary);margin-bottom:8px">Road repair needed near park</p>
+        <div class="progress-bar" style="margin-bottom:6px"><div class="progress-fill" style="width:100%;background:var(--secondary)"></div></div>
+        <div style="display:flex;justify-content:space-between">
+          <span style="font-size:11px;color:var(--text-muted)">Filed: Jun 10, 2026</span>
+          <span style="font-size:11px;color:var(--secondary);font-weight:500">Resolved in 4 days</span>
+        </div>
+      </div>
+      <div style="height:20px"></div>
+    </div>
+    <div class="tab-bar">
+      <div class="tab-item" onclick="switchTab('home')"><i class="fas fa-house"></i><span>Home</span></div>
+      <div class="tab-item" onclick="switchTab('transport')"><i class="fas fa-bus"></i><span>Transit</span></div>
+      <div class="tab-item active" onclick="switchTab('services')"><i class="fas fa-grid-2"></i><span>Services</span></div>
+      <div class="tab-item" onclick="switchTab('community')"><i class="fas fa-people-group"></i><span>Community</span></div>
+      <div class="tab-item" onclick="switchTab('profile')"><i class="fas fa-user"></i><span>Profile</span></div>
+    </div>
+  </div>
+
+  <!-- ==================== HEALTHCARE SCREEN ==================== -->
+  <div class="screen right" id="screen-healthcare" style="background:var(--bg)">
+    <button class="nav-back" onclick="navigateTo('screen-home')"><i class="fas fa-arrow-left" style="font-size:14px;color:var(--text-primary)"></i></button>
+    <div class="nav-title">Healthcare</div>
+    <div style="padding:90px 20px 20px">
+      <!-- Emergency -->
+      <div style="display:flex;gap:10px;margin-bottom:20px">
+        <div class="card" style="flex:1;padding:14px;display:flex;align-items:center;gap:10px;cursor:pointer;border:1.5px solid var(--error);background:var(--error-light)">
+          <i class="fas fa-truck-medical" style="font-size:20px;color:var(--error)"></i>
+          <div><p style="font-size:14px;font-weight:700;color:var(--error)">Ambulance</p><p style="font-size:11px;color:var(--error);opacity:.7">108</p></div>
+        </div>
+        <div class="card" style="flex:1;padding:14px;display:flex;align-items:center;gap:10px;cursor:pointer;border:1.5px solid #E91E63;background:#FCE4EC">
+          <i class="fas fa-droplet" style="font-size:20px;color:#E91E63"></i>
+          <div><p style="font-size:14px;font-weight:700;color:#E91E63">Blood Bank</p><p style="font-size:11px;color:#E91E63;opacity:.7">Find donors</p></div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-bottom:16px;overflow-x:auto;scrollbar-width:none">
+        <span class="chip active">All</span>
+        <span class="chip">Hospitals</span>
+        <span class="chip">Doctors</span>
+        <span class="chip">Pharmacies</span>
+        <span class="chip">Clinics</span>
+        <span class="chip">Diagnostics</span>
+      </div>
+
+      <!-- Hospital Cards -->
+      <div class="card" style="margin-bottom:12px;padding:0;overflow:hidden">
+        <img src="https://picsum.photos/seed/hospital1/400/160" style="width:100%;height:120px;object-fit:cover" alt="Hospital">
+        <div style="padding:14px">
+          <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:4px">
+            <p style="font-size:15px;font-weight:700;color:var(--text-primary)">Lilavati Hospital</p>
+            <div style="display:flex;align-items:center;gap:3px"><i class="fas fa-star" style="font-size:11px;color:var(--warning)"></i><span style="font-size:12px;font-weight:600;color:var(--text-primary)">4.5</span></div>
+          </div>
+          <p style="font-size:12px;color:var(--text-secondary);margin-bottom:8px"><i class="fas fa-location-dot" style="margin-right:4px"></i>Bandra West · 2.5 km</p>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
+            <span class="badge" style="background:var(--secondary-light);color:var(--secondary)">24/7</span>
+            <span class="badge" style="background:var(--primary-light);color:var(--primary)">Multi-Specialty</span>
+            <span class="badge" style="background:var(--info-light);color:var(--info)">Emergency</span>
+          </div>
+          <button class="btn btn-primary" style="width:100%;padding:10px;font-size:13px">Book Appointment</button>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:20px;padding:0;overflow:hidden">
+        <img src="https://picsum.photos/seed/hospital2/400/160" style="width:100%;height:120px;object-fit:cover" alt="Hospital">
+        <div style="padding:14px">
+          <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:4px">
+            <p style="font-size:15px;font-weight:700;color:var(--text-primary)">Kokilaben Hospital</p>
+            <div style="display:flex;align-items:center;gap:3px"><i class="fas fa-star" style="font-size:11px;color:var(--warning)"></i><span style="font-size:12px;font-weight:600;color:var(--text-primary)">4.3</span></div>
+          </div>
+          <p style="font-size:12px;color:var(--text-secondary);margin-bottom:8px"><i class="fas fa-location-dot" style="margin-right:4px"></i>Andheri West · 1.2 km</p>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
+            <span class="badge" style="background:var(--secondary-light);color:var(--secondary)">24/7</span>
+            <span class="badge" style="background:var(--primary-light);color:var(--primary)">Cardiac</span>
+          </div>
+          <button class="btn btn-primary" style="width:100%;padding:10px;font-size:13px">Book Appointment</button>
+        </div>
+      </div>
+      <div style="height:20px"></div>
+    </div>
+  </div>
+
+  <!-- ==================== SOS SCREEN ==================== -->
+  <div class="screen right" id="screen-sos" style="background:#0a0a0a">
+    <button class="nav-back" style="background:rgba(255,255,255,0.1)" onclick="navigateTo('screen-home')"><i class="fas fa-arrow-left" style="font-size:14px;color:#fff"></i></button>
+    <div style="padding:90px 20px 20px;display:flex;flex-direction:column;align-items:center;min-height:100%">
+      <h1 style="font-size:22px;font-weight:800;color:#fff;margin-bottom:6px;text-align:center">Emergency SOS</h1>
+      <p style="font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:40px;text-align:center">One tap to alert emergency contacts & services</p>
+
+      <!-- SOS Button -->
+      <div style="position:relative;display:flex;align-items:center;justify-content:center;margin-bottom:40px">
+        <div class="sos-ring"></div>
+        <div class="sos-ring" style="animation-delay:.6s"></div>
+        <div class="sos-ring" style="animation-delay:1.2s"></div>
+        <div style="width:140px;height:140px;border-radius:50%;background:linear-gradient(135deg,var(--error),#D50000);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 0 40px rgba(255,23,68,0.4);z-index:2" onclick="this.style.transform='scale(0.9)';setTimeout(()=>this.style.transform='',150)">
+          <i class="fas fa-shield-heart" style="font-size:36px;color:#fff;margin-bottom:4px"></i>
+          <span style="font-size:18px;font-weight:800;color:#fff">SOS</span>
+        </div>
+      </div>
+
+      <!-- Emergency Contacts -->
+      <div style="width:100%;margin-bottom:20px">
+        <p style="font-size:13px;font-weight:600;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px">Quick Dial</p>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.06);padding:14px 16px;border-radius:14px;cursor:pointer">
+            <div style="width:42px;height:42px;background:rgba(255,23,68,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center"><i class="fas fa-phone" style="color:var(--error);font-size:16px"></i></div>
+            <div style="flex:1"><p style="font-size:14px;font-weight:600;color:#fff">Police</p><p style="font-size:12px;color:rgba(255,255,255,0.4)">100</p></div>
+            <i class="fas fa-chevron-right" style="color:rgba(255,255,255,0.2);font-size:12px"></i>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.06);padding:14px 16px;border-radius:14px;cursor:pointer">
+            <div style="width:42px;height:42px;background:rgba(255,109,0,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center"><i class="fas fa-fire-extinguisher" style="color:var(--accent);font-size:16px"></i></div>
+            <div style="flex:1"><p style="font-size:14px;font-weight:600;color:#fff">Fire Department</p><p style="font-size:12px;color:rgba(255,255,255,0.4)">101</p></div>
+            <i class="fas fa-chevron-right" style="color:rgba(255,255,255,0.2);font-size:12px"></i>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.06);padding:14px 16px;border-radius:14px;cursor:pointer">
+            <div style="width:42px;height:42px;background:rgba(0,200,83,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center"><i class="fas fa-truck-medical" style="color:var(--secondary);font-size:16px"></i></div>
+            <div style="flex:1"><p style="font-size:14px;font-weight:600;color:#fff">Ambulance</p><p style="font-size:12px;color:rgba(255,255,255,0.4)">108</p></div>
+            <i class="fas fa-chevron-right" style="color:rgba(255,255,255,0.2);font-size:12px"></i>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.06);padding:14px 16px;border-radius:14px;cursor:pointer">
+            <div style="width:42px;height:42px;background:rgba(156,39,176,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center"><i class="fas fa-venus" style="color:#9C27B0;font-size:16px"></i></div>
+            <div style="flex:1"><p style="font-size:14px;font-weight:600;color:#fff">Women Helpline</p><p style="font-size:12px;color:rgba(255,255,255,0.4)">181</p></div>
+            <i class="fas fa-chevron-right" style="color:rgba(255,255,255,0.2);font-size:12px"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Safety Features -->
+      <div style="width:100%;display:flex;gap:10px">
+        <div style="flex:1;background:rgba(255,255,255,0.06);border-radius:14px;padding:14px;text-align:center;cursor:pointer">
+          <i class="fas fa-location-crosshairs" style="font-size:20px;color:var(--info);margin-bottom:6px;display:block"></i>
+          <span style="font-size:11px;color:rgba(255,255,255,0.6);font-weight:500">Share Live Location</span>
+        </div>
+        <div style="flex:1;background:rgba(255,255,255,0.06);border-radius:14px;padding:14px;text-align:center;cursor:pointer">
+          <i class="fas fa-phone-slash" style="font-size:20px;color:var(--warning);margin-bottom:6px;display:block"></i>
+          <span style="font-size:11px;color:rgba(255,255,255,0.6);font-weight:500">Fake Call</span>
+        </div>
+        <div style="flex:1;background:rgba(255,255,255,0.06);border-radius:14px;padding:14px;text-align:center;cursor:pointer">
+          <i class="fas fa-volume-xmark" style="font-size:20px;color:var(--secondary);margin-bottom:6px;display:block"></i>
+          <span style="font-size:11px;color:rgba(255,255,255,0.6);font-weight:500">Silent SOS</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== JOBS SCREEN ==================== -->
+  <div class="screen right" id="screen-jobs" style="background:var(--bg)">
+    <button class="nav-back" onclick="navigateTo('screen-home')"><i class="fas fa-arrow-left" style="font-size:14px;color:var(--text-primary)"></i></button>
+    <div class="nav-title">Jobs & Employment</div>
+    <div style="padding:90px 20px 20px">
+      <div style="display:flex;gap:8px;margin-bottom:16px;overflow-x:auto;scrollbar-width:none">
+        <span class="chip active">All Jobs</span>
+        <span class="chip">Government</span>
+        <span class="chip">Private</span>
+        <span class="chip">Internships</span>
+        <span class="chip">Remote</span>
+      </div>
+
+      <div class="card" style="margin-bottom:12px">
+        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:10px">
+          <div style="display:flex;gap:10px;align-items:center">
+            <div style="width:44px;height:44px;background:linear-gradient(135deg,#1a73e8,#4285f4);border-radius:12px;display:flex;align-items:center;justify-content:center"><span style="font-size:16px;font-weight:800;color:#fff">G</span></div>
+            <div><p style="font-size:14px;font-weight:600;color:var(--text-primary)">Google India</p><p style="font-size:12px;color:var(--text-secondary)">Andheri East, Mumbai</p></div>
+          </div>
+          <i class="far fa-bookmark" style="font-size:18px;color:var(--text-muted);cursor:pointer"></i>
+        </div>
+        <p style="font-size:15px;font-weight:700;color:var(--text-primary);margin-bottom:6px">Senior Software Engineer</p>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
+          <span class="badge" style="background:var(--primary-light);color:var(--primary)">Full-Time</span>
+          <span class="badge" style="background:var(--secondary-light);color:var(--secondary)">₹25-40 LPA</span>
+          <span class="badge" style="background:var(--accent-light);color:var(--accent)">Hybrid</span>
+        </div>
+        <p style="font-size:12px;color:var(--text-muted)">Posted 2 days ago · 47 applicants</p>
+      </div>
+
+      <div class="card" style="margin-bottom:12px">
+        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:10px">
+          <div style="display:flex;gap:10px;align-items:center">
+            <div style="width:44px;height:44px;background:linear-gradient(135deg,#0066CC,#0088FF);border-radius:12px;display:flex;align-items:center;justify-content:center"><i class="fas fa-landmark" style="font-size:18px;color:#fff"></i></div>
+            <div><p style="font-size:14px;font-weight:600;color:var(--text-primary)">MCGM</p><p style="font-size:12px;color:var(--text-secondary)">Fort, Mumbai</p></div>
+          </div>
+          <span class="badge" style="background:var(--error-light);color:var(--error)">Govt</span>
+        </div>
+        <p style="font-size:15px;font-weight:700;color:var(--text-primary);margin-bottom:6px">Junior Clerk — 245 Posts</p>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
+          <span class="badge" style="background:var(--primary-light);color:var(--primary)">Full-Time</span>
+          <span class="badge" style="background:var(--secondary-light);color:var(--secondary)">₹5.2 LPA</span>
+        </div>
+        <p style="font-size:12px;color:var(--text-muted)">Last date: Jul 15, 2026 · 1.2K applicants</p>
+      </div>
+
+      <div class="card" style="margin-bottom:20px">
+        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:10px">
+          <div style="display:flex;gap:10px;align-items:center">
+            <div style="width:44px;height:44px;background:linear-gradient(135deg,#E91E63,#FF5252);border-radius:12px;display:flex;align-items:center;justify-content:center"><span style="font-size:16px;font-weight:800;color:#fff">S</span></div>
+            <div><p style="font-size:14px;font-weight:600;color:var(--text-primary)">StartupX</p><p style="font-size:12px;color:var(--text-secondary)">BKC, Mumbai</p></div>
+          </div>
+          <i class="far fa-bookmark" style="font-size:18px;color:var(--text-muted);cursor:pointer"></i>
+        </div>
+        <p style="font-size:15px;font-weight:700;color:var(--text-primary);margin-bottom:6px">Product Design Intern</p>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
+          <span class="badge" style="background:var(--info-light);color:var(--info)">Internship</span>
+          <span class="badge" style="background:var(--secondary-light);color:var(--secondary)">₹20K/mo</span>
+          <span class="badge" style="background:var(--accent-light);color:var(--accent)">3 Months</span>
+        </div>
+        <p style="font-size:12px;color:var(--text-muted)">Posted today · 12 applicants</p>
+      </div>
+
+      <div class="card" style="background:linear-gradient(135deg,var(--primary),#004C99);display:flex;align-items:center;gap:14px;cursor:pointer">
+        <i class="fas fa-wand-magic-sparkles" style="font-size:22px;color:#fff"></i>
+        <div><p style="font-size:15px;font-weight:700;color:#fff">AI Resume Builder</p><p style="font-size:12px;color:rgba(255,255,255,0.7)">Create a professional resume in minutes</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== EVENTS SCREEN ==================== -->
+  <div class="screen right" id="screen-events" style="background:var(--bg)">
+    <button class="nav-back" onclick="navigateTo('screen-home')"><i class="fas fa-arrow-left" style="font-size:14px;color:var(--text-primary)"></i></button>
+    <div class="nav-title">Events</div>
+    <div style="padding:90px 20px 20px">
+      <div style="display:flex;gap:8px;margin-bottom:16px;overflow-x:auto;scrollbar-width:none">
+        <span class="chip active">This Week</span>
+        <span class="chip">This Month</span>
+        <span class="chip">Free</span>
+        <span class="chip">Cultural</span>
+        <span class="chip">Sports</span>
+        <span class="chip">Concerts</span>
+      </div>
+
+      <div class="card" style="margin-bottom:14px;padding:0;overflow:hidden">
+        <div style="position:relative">
+          <img src="https://picsum.photos/seed/event-festival/400/200" style="width:100%;height:160px;object-fit:cover" alt="Event">
+          <div style="position:absolute;top:12px;left:12px;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);padding:6px 12px;border-radius:10px;display:flex;flex-direction:column;align-items:center">
+            <span style="font-size:18px;font-weight:800;color:#fff;line-height:1">28</span>
+            <span style="font-size:10px;color:rgba(255,255,255,0.7);text-transform:uppercase;font-weight:600">Jun</span>
+          </div>
+          <div style="position:absolute;top:12px;right:12px"><span class="badge" style="background:var(--secondary);color:#fff;font-size:12px">Free</span></div>
+        </div>
+        <div style="padding:14px">
+          <p style="font-size:16px;font-weight:700;color:var(--text-primary);margin-bottom:4px">Mumbai Monsoon Festival</p>
+          <p style="font-size:12px;color:var(--text-secondary);margin-bottom:10px"><i class="fas fa-location-dot" style="margin-right:4px"></i>Gateway of India · 6:00 PM</p>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div style="display:flex;align-items:center;gap:4px"><i class="fas fa-users" style="font-size:12px;color:var(--text-muted)"></i><span style="font-size:12px;color:var(--text-secondary)">2.4K going</span></div>
+            <button class="btn btn-primary" style="padding:8px 20px;font-size:13px">Book</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:14px;padding:0;overflow:hidden">
+        <div style="position:relative">
+          <img src="https://picsum.photos/seed/event-cricket/400/200" style="width:100%;height:160px;object-fit:cover" alt="Event">
+          <div style="position:absolute;top:12px;left:12px;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);padding:6px 12px;border-radius:10px;display:flex;flex-direction:column;align-items:center">
+            <span style="font-size:18px;font-weight:800;color:#fff;line-height:1">02</span>
+            <span style="font-size:10px;color:rgba(255,255,255,0.7);text-transform:uppercase;font-weight:600">Jul</span>
+          </div>
+        </div>
+        <div style="padding:14px">
+          <p style="font-size:16px;font-weight:700;color:var(--text-primary);margin-bottom:4px">Street Cricket Tournament</p>
+          <p style="font-size:12px;color:var(--text-secondary);margin-bottom:10px"><i class="fas fa-location-dot" style="margin-right:4px"></i>Dadar Shivaji Park · 8:00 AM</p>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div style="display:flex;align-items:center;gap:4px"><i class="fas fa-users" style="font-size:12px;color:var(--text-muted)"></i><span style="font-size:12px;color:var(--text-secondary)">560 going</span></div>
+            <button class="btn btn-secondary" style="padding:8px 20px;font-size:13px">Register</button>
+          </div>
+        </div>
+      </div>
+      <div style="height:20px"></div>
+    </div>
+  </div>
+
+  <!-- ==================== COMMUNITY SCREEN ==================== -->
+  <div class="screen right" id="screen-community" style="background:var(--bg);padding-bottom:85px">
+    <div style="height:54px"></div>
+    <div style="padding:16px 20px 0">
+      <h1 style="font-size:24px;font-weight:800;color:var(--text-primary);margin-bottom:16px">Community</h1>
+
+      <!-- Community Tabs -->
+      <div style="display:flex;gap:0;background:var(--surface);border-radius:12px;padding:4px;margin-bottom:16px">
+        <div style="flex:1;text-align:center;padding:10px;background:var(--primary);border-radius:10px;cursor:pointer"><span style="font-size:13px;font-weight:600;color:#fff">Feed</span></div>
+        <div style="flex:1;text-align:center;padding:10px;cursor:pointer;border-radius:10px"><span style="font-size:13px;font-weight:500;color:var(--text-secondary)">Forums</span></div>
+        <div style="flex:1;text-align:center;padding:10px;cursor:pointer;border-radius:10px"><span style="font-size:13px;font-weight:500;color:var(--text-secondary)">Polls</span></div>
+        <div style="flex:1;text-align:center;padding:10px;cursor:pointer;border-radius:10px"><span style="font-size:13px;font-weight:500;color:var(--text-secondary)">Help</span></div>
+      </div>
+
+      <!-- Post 1 -->
+      <div class="card" style="margin-bottom:12px">
+        <div style="display:flex;gap:10px;align-items:center;margin-bottom:10px">
+          <img src="https://picsum.photos/seed/user-rahul/60/60" style="width:36px;height:36px;border-radius:50%;object-fit:cover" alt="User">
+          <div style="flex:1">
+            <p style="font-size:13px;font-weight:600;color:var(--text-primary)">Rahul Mehta</p>
+            <p style="font-size:11px;color:var(--text-muted)">Andheri West · 2h ago</p>
+          </div>
+          <i class="fas fa-ellipsis" style="color:var(--text-muted);cursor:pointer"></i>
+        </div>
+        <p style="font-size:14px;color:var(--text-primary);line-height:1.5;margin-bottom:10px">Found a lost wallet near Andheri station. Contains ID cards and some cash. Please share if anyone knows the owner!</p>
+        <img src="https://picsum.photos/seed/lost-wallet/400/250" style="width:100%;height:180px;object-fit:cover;border-radius:10px;margin-bottom:10px" alt="Post image">
+        <div style="display:flex;gap:20px">
+          <span style="font-size:13px;color:var(--text-secondary);cursor:pointer"><i class="fas fa-heart" style="color:var(--error);margin-right:4px"></i>32</span>
+          <span style="font-size:13px;color:var(--text-secondary);cursor:pointer"><i class="far fa-comment" style="margin-right:4px"></i>8</span>
+          <span style="font-size:13px;color:var(--text-secondary);cursor:pointer"><i class="fas fa-share" style="margin-right:4px"></i>Share</span>
+        </div>
+      </div>
+
+      <!-- Post 2 - Poll -->
+      <div class="card" style="margin-bottom:12px">
+        <div style="display:flex;gap:10px;align-items:center;margin-bottom:10px">
+          <img src="https://picsum.photos/seed/user-anita/60/60" style="width:36px;height:36px;border-radius:50%;object-fit:cover" alt="User">
+          <div style="flex:1">
+            <p style="font-size:13px;font-weight:600;color:var(--text-primary)">Anita Desai</p>
+            <p style="font-size:11px;color:var(--text-muted)">BMC Official · 5h ago</p>
+          </div>
+          <span class="badge" style="background:var(--info-light);color:var(--info)">Poll</span>
+        </div>
+        <p style="font-size:14px;font-weight:600;color:var(--text-primary);margin-bottom:12px">Should the new park in Versova include a dog walking zone?</p>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px">
+          <div style="position:relative;background:var(--primary-light);border:1.5px solid var(--primary);border-radius:10px;padding:12px 14px;cursor:pointer;overflow:hidden">
+            <div style="position:absolute;left:0;top:0;bottom:0;width:72%;background:rgba(0,102,204,0.12);border-radius:8px"></div>
+            <div style="position:relative;display:flex;justify-content:space-between"><span style="font-size:13px;font-weight:500;color:var(--primary)">Yes, absolutely!</span><span style="font-size:13px;font-weight:700;color:var(--primary)">72%</span></div>
+          </div>
+          <div style="position:relative;background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;cursor:pointer;overflow:hidden">
+            <div style="position:absolute;left:0;top:0;bottom:0;width:18%;background:rgba(0,0,0,0.03);border-radius:8px"></div>
+            <div style="position:relative;display:flex;justify-content:space-between"><span style="font-size:13px;font-weight:500;color:var(--text-secondary)">No, keep it green only</span><span style="font-size:13px;font-weight:700;color:var(--text-muted)">18%</span></div>
+          </div>
+          <div style="position:relative;background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;cursor:pointer;overflow:hidden">
+            <div style="position:absolute;left:0;top:0;bottom:0;width:10%;background:rgba(0,0,0,0.03);border-radius:8px"></div>
+            <div style="position:relative;display:flex;justify-content:space-between"><span style="font-size:13px;font-weight:500;color:var(--text-secondary)">Not sure</span><span style="font-size:13px;font-weight:700;color:var(--text-muted)">10%</span></div>
+          </div>
+        </div>
+        <p style="font-size:12px;color:var(--text-muted)">847 votes · 2 days left</p>
+      </div>
+
+      <!-- Volunteer Card -->
+      <div class="card" style="background:linear-gradient(135deg,var(--secondary),#00E676);margin-bottom:20px;display:flex;align-items:center;gap:14px;cursor:pointer">
+        <i class="fas fa-hand-holding-heart" style="font-size:24px;color:#fff"></i>
+        <div style="flex:1">
+          <p style="font-size:15px;font-weight:700;color:#fff">Volunteer Opportunities</p>
+          <p style="font-size:12px;color:rgba(255,255,255,0.8)">12 causes near you need help</p>
+        </div>
+        <i class="fas fa-chevron-right" style="color:rgba(255,255,255,0.6)"></i>
+      </div>
+      <div style="height:20px"></div>
+    </div>
+    <div class="tab-bar">
+      <div class="tab-item" onclick="switchTab('home')"><i class="fas fa-house"></i><span>Home</span></div>
+      <div class="tab-item" onclick="switchTab('transport')"><i class="fas fa-bus"></i><span>Transit</span></div>
+      <div class="tab-item" onclick="switchTab('services')"><i class="fas fa-grid-2"></i><span>Services</span></div>
+      <div class="tab-item active" onclick="switchTab('community')"><i class="fas fa-people-group"></i><span>Community</span></div>
+      <div class="tab-item" onclick="switchTab('profile')"><i class="fas fa-user"></i><span>Profile</span></div>
+    </div>
+  </div>
+
+  <!-- ==================== BILLS SCREEN ==================== -->
+  <div class="screen right" id="screen-bills" style="background:var(--bg)">
+    <button class="nav-back" onclick="navigateTo('screen-home')"><i class="fas fa-arrow-left" style="font-size:14px;color:var(--text-primary)"></i></button>
+    <div class="nav-title">Pay Bills</div>
+    <div style="padding:90px 20px 20px">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer">
+          <div style="width:56px;height:56px;background:var(--warning-light);border-radius:16px;display:flex;align-items:center;justify-content:center"><i class="fas fa-bolt" style="font-size:22px;color:var(--warning)"></i></div>
+          <span style="font-size:12px;font-weight:500;color:var(--text-secondary)">Electricity</span>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer">
+          <div style="width:56px;height:56px;background:var(--primary-light);border-radius:16px;display:flex;align-items:center;justify-content:center"><i class="fas fa-droplet" style="font-size:22px;color:var(--primary)"></i></div>
+          <span style="font-size:12px;font-weight:500;color:var(--text-secondary)">Water</span>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer">
+          <div style="width:56px;height:56px;background:var(--secondary-light);border-radius:16px;display:flex;align-items:center;justify-content:center"><i class="fas fa-wifi" style="font-size:22px;color:var(--secondary)"></i></div>
+          <span style="font-size:12px;font-weight:500;color:var(--text-secondary)">Internet</span>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer">
+          <div style="width:56px;height:56px;background:var(--error-light);border-radius:16px;display:flex;align-items:center;justify-content:center"><i class="fas fa-fire-flame-curved" style="font-size:22px;color:var(--error)"></i></div>
+          <span style="font-size:12px;font-weight:500;color:var(--text-secondary)">Gas</span>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer">
+          <div style="width:56px;height:56px;background:var(--accent-light);border-radius:16px;display:flex;align-items:center;justify-content:center"><i class="fas fa-mobile-screen" style="font-size:22px;color:var(--accent)"></i></div>
+          <span style="font-size:12px;font-weight:500;color:var(--text-secondary)">Mobile</span>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer">
+          <div style="width:56px;height:56px;background:#F3E8FF;border-radius:16px;display:flex;align-items:center;justify-content:center"><i class="fas fa-tv" style="font-size:22px;color:#7C3AED"></i></div>
+          <span style="font-size:12px;font-weight:500;color:var(--text-secondary)">DTH/Cable</span>
+        </div>
+      </div>
+
+      <h2 style="font-size:17px;font-weight:700;color:var(--text-primary);margin-bottom:12px">Upcoming Bills</h2>
+      <div class="card" style="margin-bottom:10px;display:flex;align-items:center;gap:12px">
+        <div style="width:44px;height:44px;background:var(--warning-light);border-radius:12px;display:flex;align-items:center;justify-content:center"><i class="fas fa-bolt" style="color:var(--warning);font-size:18px"></i></div>
+        <div style="flex:1"><p style="font-size:14px;font-weight:600;color:var(--text-primary)">Adani Electricity</p><p style="font-size:12px;color:var(--text-secondary)">Due: Jun 28, 2026</p></div>
+        <div style="text-align:right"><p style="font-size:16px;font-weight:700;color:var(--text-primary)">₹2,840</p><span class="badge" style="background:var(--warning-light);color:var(--warning);font-size:10px">3 days</span></div>
+      </div>
+      <div class="card" style="margin-bottom:10px;display:flex;align-items:center;gap:12px">
+        <div style="width:44px;height:44px;background:var(--primary-light);border-radius:12px;display:flex;align-items:center;justify-content:center"><i class="fas fa-droplet" style="color:var(--primary);font-size:18px"></i></div>
+        <div style="flex:1"><p style="font-size:14px;font-weight:600;color:var(--text-primary)">BMC Water</p><p style="font-size:12px;color:var(--text-secondary)">Due: Jul 5, 2026</p></div>
+        <div style="text-align:right"><p style="font-size:16px;font-weight:700;color:var(--text-primary)">₹640</p><span class="badge" style="background:var(--primary-light);color:var(--primary);font-size:10px">10 days</span></div>
+      </div>
+      <div class="card" style="margin-bottom:20px;display:flex;align-items:center;gap:12px">
+        <div style="width:44px;height:44px;background:var(--secondary-light);border-radius:12px;display:flex;align-items:center;justify-content:center"><i class="fas fa-wifi" style="color:var(--secondary);font-size:18px"></i></div>
+        <div style="flex:1"><p style="font-size:14px;font-weight:600;color:var(--text-primary)">Jio Fiber</p><p style="font-size:12px;color:var(--text-secondary)">Due: Jul 10, 2026</p></div>
+        <div style="text-align:right"><p style="font-size:16px;font-weight:700;color:var(--text-primary)">₹999</p><span class="badge" style="background:var(--secondary-light);color:var(--secondary);font-size:10px">15 days</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SHOPPING SCREEN ==================== -->
+  <div class="screen right" id="screen-shopping" style="background:var(--bg)">
+    <button class="nav-back" onclick="navigateTo('screen-home')"><i class="fas fa-arrow-left" style="font-size:14px;color:var(--text-primary)"></i></button>
+    <div class="nav-title">Shopping & Deals</div>
+    <div style="padding:90px 20px 20px">
+      <div style="display:flex;gap:8px;margin-bottom:16px;overflow-x:auto;scrollbar-width:none">
+        <span class="chip active">Nearby</span>
+        <span class="chip">Restaurants</span>
+        <span class="chip">Malls</span>
+        <span class="chip">Markets</span>
+        <span class="chip">Services</span>
+      </div>
+
+      <div class="card" style="margin-bottom:12px;padding:0;overflow:hidden">
+        <div style="position:relative">
+          <img src="https://picsum.photos/seed/restaurant-italian/400/200" style="width:100%;height:140px;object-fit:cover" alt="Restaurant">
+          <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.7));padding:12px 14px">
+            <div style="display:flex;justify-content:space-between;align-items:end">
+              <div><p style="font-size:16px;font-weight:700;color:#fff">Trattoria</p><p style="font-size:12px;color:rgba(255,255,255,0.7)">Italian · ₹800 for two</p></div>
+              <div style="display:flex;align-items:center;gap:3px;background:var(--secondary);padding:4px 8px;border-radius:6px"><i class="fas fa-star" style="font-size:10px;color:#fff"></i><span style="font-size:12px;font-weight:700;color:#fff">4.6</span></div>
+            </div>
+          </div>
+        </div>
+        <div style="padding:12px 14px;display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:12px;color:var(--text-secondary)"><i class="fas fa-location-dot" style="margin-right:4px"></i>Bandra West · 1.8 km</span>
+          <span class="badge" style="background:var(--error-light);color:var(--error)">20% OFF</span>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:12px;padding:0;overflow:hidden">
+        <div style="position:relative">
+          <img src="https://picsum.photos/seed/mall-shop/400/200" style="width:100%;height:140px;object-fit:cover" alt="Store">
+          <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.7));padding:12px 14px">
+            <div style="display:flex;justify-content:space-between;align-items:end">
+              <div><p style="font-size:16px;font-weight:700;color:#fff">Phoenix Mall</p><p style="font-size:12px;color:rgba(255,255,255,0.7)">Shopping Mall · 300+ stores</p></div>
+              <div style="display:flex;align-items:center;gap:3px;background:var(--secondary);padding:4px 8px;border-radius:6px"><i class="fas fa-star" style="font-size:10px;color:#fff"></i><span style="font-size:12px;font-weight:700;color:#fff">4.4</span></div>
+            </div>
+          </div>
+        </div>
+        <div style="padding:12px 14px;display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:12px;color:var(--text-secondary)"><i class="fas fa-location-dot" style="margin-right:4px"></i>Lower Parel · 5 km</span>
+          <span class="badge" style="background:var(--accent-light);color:var(--accent)">50+ Deals</span>
+        </div>
+      </div>
+      <div style="height:20px"></div>
+    </div>
+  </div>
+
+  <!-- ==================== AI ASSISTANT SCREEN ==================== -->
+  <div class="screen right" id="screen-ai-assistant" style="background:var(--bg);display:flex;flex-direction:column">
+    <button class="nav-back" onclick="navigateTo('screen-home')"><i class="fas fa-arrow-left" style="font-size:14px;color:var(--text-primary)"></i></button>
+    <div class="nav-title">City AI Assistant</div>
+    <div style="padding:90px 20px 20px;flex:1;display:flex;flex-direction:column;overflow-y:auto">
+      <!-- AI Avatar -->
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;padding:16px;background:linear-gradient(135deg,var(--primary-light),#d0e8ff);border-radius:16px">
+        <div style="width:48px;height:48px;background:linear-gradient(135deg,var(--primary),#3399FF);border-radius:50%;display:flex;align-items:center;justify-content:center">
+          <i class="fas fa-robot" style="font-size:22px;color:#fff"></i>
+        </div>
+        <div>
+          <p style="font-size:15px;font-weight:700;color:var(--primary)">PulseAI</p>
+          <p style="font-size:12px;color:var(--text-secondary)">I can help with city services, routes, events & more</p>
+        </div>
+        <div class="pulse-dot" style="margin-left:auto"></div>
+      </div>
+
+      <!-- Chat Messages -->
+      <div style="flex:1;display:flex;flex-direction:column;gap:16px">
+        <div style="display:flex;gap:10px;align-items:start">
+          <div style="width:32px;height:32px;background:var(--primary-light);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fas fa-robot" style="font-size:14px;color:var(--primary)"></i></div>
+          <div style="background:var(--surface);border-radius:4px 16px 16px 16px;padding:12px 16px;max-width:260px;box-shadow:var(--shadow)">
+            <p style="font-size:14px;color:var(--text-primary);line-height:1.5">Hello Priya! How can I help you with your city today?</p>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:10px;align-items:start;justify-content:flex-end">
+          <div style="background:var(--primary);border-radius:16px 4px 16px 16px;padding:12px 16px;max-width:260px">
+            <p style="font-size:14px;color:#fff;line-height:1.5">What's the fastest way to get from Andheri to BKC right now?</p>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:10px;align-items:start">
+          <div style="width:32px;height:32px;background:var(--primary-light);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fas fa-robot" style="font-size:14px;color:var(--primary)"></i></div>
+          <div style="background:var(--surface);border-radius:4px 16px 16px 16px;padding:12px 16px;max-width:260px;box-shadow:var(--shadow)">
+            <p style="font-size:14px;color:var(--text-primary);line-height:1.5">The fastest route right now is <b>Metro Line 1 + Metro Line 3</b>:</p>
+            <div style="margin-top:10px;background:var(--bg);border-radius:10px;padding:10px">
+              <p style="font-size:13px;color:var(--text-primary);font-weight:600">🚇 Metro → 28 min · ₹40</p>
+              <p style="font-size:12px;color:var(--text-secondary);margin-top:4px">Andheri → DN Nagar (Line 1)<br>DN Nagar → BKC (Line 3)</p>
+            </div>
+            <p style="font-size:12px;color:var(--text-secondary);margin-top:8px">Road traffic is heavy on WEH. Metro saves ~20 min.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Suggestions -->
+      <div style="margin-top:16px;display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px">
+        <span class="chip" style="font-size:12px;padding:6px 12px">Nearby hospitals</span>
+        <span class="chip" style="font-size:12px;padding:6px 12px">Pay electricity bill</span>
+        <span class="chip" style="font-size:12px;padding:6px 12px">Weekend events</span>
+        <span class="chip" style="font-size:12px;padding:6px 12px">File complaint</span>
+      </div>
+    </div>
+
+    <!-- Chat Input -->
+    <div style="padding:12px 20px 30px;background:var(--surface);border-top:1px solid var(--border)">
+      <div style="display:flex;gap:10px;align-items:center">
+        <div style="width:38px;height:38px;background:var(--bg);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer"><i class="fas fa-microphone" style="font-size:15px;color:var(--primary)"></i></div>
+        <div style="flex:1;display:flex;align-items:center;background:var(--bg);border-radius:24px;padding:4px 4px 4px 16px">
+          <input type="text" class="input-field" style="border:none;background:transparent;padding:8px 0;box-shadow:none" placeholder="Ask PulseAI anything...">
+          <div style="width:34px;height:34px;background:var(--primary);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0"><i class="fas fa-arrow-up" style="font-size:14px;color:#fff"></i></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== CITIZEN CARD SCREEN ==================== -->
+  <div class="screen right" id="screen-citizen-card" style="background:var(--bg)">
+    <button class="nav-back" onclick="navigateTo('screen-home')"><i class="fas fa-arrow-left" style="font-size:14px;color:var(--text-primary)"></i></button>
+    <div class="nav-title">Digital Citizen Card</div>
+    <div style="padding:90px 20px 20px">
+      <div style="background:linear-gradient(135deg,#1A1A2E 0%,#2D2D5E 50%,#1A1A2E 100%);border-radius:20px;padding:24px;position:relative;overflow:hidden;margin-bottom:24px">
+        <div style="position:absolute;top:-40px;right:-40px;width:150px;height:150px;background:rgba(255,255,255,0.04);border-radius:50%"></div>
+        <div style="position:absolute;bottom:-60px;left:-20px;width:120px;height:120px;background:rgba(255,255,255,0.03);border-radius:50%"></div>
+        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:20px;position:relative;z-index:1">
+          <div style="display:flex;align-items:center;gap:14px">
+            <img src="https://picsum.photos/seed/avatar-priya/100/100" style="width:56px;height:56px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,0.2)" alt="Photo">
+            <div>
+              <p style="font-size:20px;font-weight:800;color:#fff">Priya Sharma</p>
+              <p style="font-size:12px;color:rgba(255,255,255,0.5)">Female · DOB: 15-Mar-1994</p>
+            </div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;position:relative;z-index:1;margin-bottom:20px">
+          <div><p style="font-size:10px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:.5px">Citizen ID</p><p style="font-size:13px;color:#fff;font-weight:600;margin-top:2px">MUM-2024-0084721</p></div>
+          <div><p style="font-size:10px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:.5px">City</p><p style="font-size:13px;color:#fff;font-weight:600;margin-top:2px">Mumbai, MH</p></div>
+          <div><p style="font-size:10px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:.5px">Ward</p><p style="font-size:13px;color:#fff;font-weight:600;margin-top:2px">K/W — Andheri West</p></div>
+          <div><p style="font-size:10px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:.5px">Status</p><div style="display:flex;align-items:center;gap:6px;margin-top:2px"><div class="pulse-dot" style="width:8px;height:8px"></div><p style="font-size:13px;color:var(--secondary);font-weight:600">Verified</p></div></div>
+        </div>
+        <div style="display:flex;justify-content:center;position:relative;z-index:1">
+          <div style="width:120px;height:120px;background:#fff;border-radius:12px;padding:8px"><div style="width:100%;height:100%;background:repeating-conic-gradient(#1a1a2e 0% 25%, #fff 0% 50%) 0 0/12px 12px;border-radius:8px"></div></div>
+        </div>
+      </div>
+
+      <!-- Documents Wallet -->
+      <h2 style="font-size:17px;font-weight:700;color:var(--text-primary);margin-bottom:12px">Document Wallet</h2>
+      <div class="card" style="margin-bottom:10px;display:flex;align-items:center;gap:12px">
+        <div style="width:42px;height:42px;background:var(--primary-light);border-radius:12px;display:flex;align-items:center;justify-content:center"><i class="fas fa-id-card" style="color:var(--primary);font-size:16px"></i></div>
+        <div style="flex:1"><p style="font-size:14px;font-weight:600;color:var(--text-primary)">Aadhaar Card</p><p style="font-size:12px;color:var(--text-secondary)">Valid till: Lifetime</p></div>
+        <span class="badge" style="background:var(--secondary-light);color:var(--secondary)"><i class="fas fa-check-circle" style="font-size:9px;margin-right:3px"></i>Linked</span>
+      </div>
+      <div class="card" style="margin-bottom:10px;display:flex;align-items:center;gap:12px">
+        <div style="width:42px;height:42px;background:var(--warning-light);border-radius:12px;display:flex;align-items:center;justify-content:center"><i class="fas fa-car" style="color:var(--warning);font-size:16px"></i></div>
+        <div style="flex:1"><p style="font-size:14px;font-weight:600;color:var(--text-primary)">Driving License</p><p style="font-size:12px;color:var(--text-secondary)">Valid till: Mar 2029</p></div>
+        <span class="badge" style="background:var(--secondary-light);color:var(--secondary)"><i class="fas fa-check-circle" style="font-size:9px;margin-right:3px"></i>Linked</span>
+      </div>
+      <div class="card" style="margin-bottom:20px;display:flex;align-items:center;gap:12px">
+        <div style="width:42px;height:42px;background:var(--error-light);border-radius:12px;display:flex;align-items:center;justify-content:center"><i class="fas fa-file-shield" style="color:var(--error);font-size:16px"></i></div>
+        <div style="flex:1"><p style="font-size:14px;font-weight:600;color:var(--text-primary)">Property Documents</p><p style="font-size:12px;color:var(--warning);font-weight:500">Expiring in 30 days</p></div>
+        <span class="badge" style="background:var(--warning-light);color:var(--warning)"><i class="fas fa-exclamation-circle" style="font-size:9px;margin-right:3px"></i>Renew</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PROFILE SCREEN ==================== -->
+  <div class="screen right" id="screen-profile" style="background:var(--bg);padding-bottom:85px">
+    <div style="height:54px"></div>
+    <div style="padding:16px 20px 0">
+      <!-- Profile Header -->
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:24px">
+        <div style="position:relative">
+          <img src="https://picsum.photos/seed/avatar-priya/120/120" style="width:68px;height:68px;border-radius:50%;object-fit:cover;border:3px solid var(--primary)" alt="Avatar">
+          <div style="position:absolute;bottom:0;right:0;width:22px;height:22px;background:var(--secondary);border-radius:50%;display:flex;align-items:center;justify-content:center;border:3px solid var(--bg)"><i class="fas fa-check" style="font-size:9px;color:#fff"></i></div>
+        </div>
+        <div style="flex:1">
+          <h1 style="font-size:22px;font-weight:800;color:var(--text-primary)">Priya Sharma</h1>
+          <p style="font-size:13px;color:var(--text-secondary)">Mumbai, Maharashtra</p>
+          <p style="font-size:12px;color:var(--primary);font-weight:500;margin-top:2px">City Pro Member</p>
+        </div>
+        <div style="width:40px;height:40px;background:var(--bg);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer"><i class="fas fa-gear" style="font-size:16px;color:var(--text-secondary)"></i></div>
+      </div>
+
+      <!-- Stats -->
+      <div style="display:flex;gap:10px;margin-bottom:24px">
+        <div class="card" style="flex:1;text-align:center;padding:14px 8px">
+          <p style="font-size:22px;font-weight:800;color:var(--primary)">2,450</p>
+          <p style="font-size:11px;color:var(--text-muted);font-weight:500">Reward Points</p>
+        </div>
+        <div class="card" style="flex:1;text-align:center;padding:14px 8px">
+          <p style="font-size:22px;font-weight:800;color:var(--secondary)">12</p>
+          <p style="font-size:11px;color:var(--text-muted);font-weight:500">Issues Resolved</p>
+        </div>
+        <div class="card" style="flex:1;text-align:center;padding:14px 8px">
+          <p style="font-size:22px;font-weight:800;color:var(--accent)">Level 5</p>
+          <p style="font-size:11px;color:var(--text-muted);font-weight:500">Civic Score</p>
+        </div>
+      </div>
+
+      <!-- Menu Items -->
+      <div class="card" style="padding:0;overflow:hidden;margin-bottom:16px">
+        <div style="display:flex;align-items:center;gap:14px;padding:14px 16px;cursor:pointer;border-bottom:1px solid var(--border)" onclick="navigateTo('screen-citizen-card')">
+          <div style="width:38px;height:38px;background:var(--primary-light);border-radius:10px;display:flex;align-items:center;justify-content:center"><i class="fas fa-id-card" style="color:var(--primary);font-size:15px"></i></div>
+          <span style="flex:1;font-size:14px;font-weight:500;color:var(--text-primary)">Digital Citizen Card</span>
+          <i class="fas fa-chevron-right" style="font-size:12px;color:var(--text-muted)"></i>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;padding:14px 16px;cursor:pointer;border-bottom:1px solid var(--border)" onclick="navigateTo('screen-bills')">
+          <div style="width:38px;height:38px;background:var(--warning-light);border-radius:10px;display:flex;align-items:center;justify-content:center"><i class="fas fa-receipt" style="color:var(--warning);font-size:15px"></i></div>
+          <span style="flex:1;font-size:14px;font-weight:500;color:var(--text-primary)">Payment History</span>
+          <i class="fas fa-chevron-right" style="font-size:12px;color:var(--text-muted)"></i>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;padding:14px 16px;cursor:pointer;border-bottom:1px solid var(--border)">
+          <div style="width:38px;height:38px;background:var(--secondary-light);border-radius:10px;display:flex;align-items:center;justify-content:center"><i class="fas fa-gift" style="color:var(--secondary);font-size:15px"></i></div>
+          <span style="flex:1;font-size:14px;font-weight:500;color:var(--text-primary)">City Rewards</span>
+          <span class="badge" style="background:var(--error);color:#fff;font-size:10px">2,450 pts</span>
+          <i class="fas fa-chevron-right" style="font-size:12px;color:var(--text-muted)"></i>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;padding:14px 16px;cursor:pointer">
+          <div style="width:38px;height:38px;background:var(--info-light);border-radius:10px;display:flex;align-items:center;justify-content:center"><i class="fas fa-language" style="color:var(--info);font-size:15px"></i></div>
+          <span style="flex:1;font-size:14px;font-weight:500;color:var(--text-primary)">Language & Accessibility</span>
+          <span style="font-size:13px;color:var(--text-muted)">English</span>
+          <i class="fas fa-chevron-right" style="font-size:12px;color:var(--text-muted)"></i>
+        </div>
+      </div>
+
+      <div class="card" style="padding:0;overflow:hidden;margin-bottom:20px">
+        <div style="display:flex;align-items:center;gap:14px;padding:14px 16px;cursor:pointer;border-bottom:1px solid var(--border)">
+          <div style="width:38px;height:38px;background:var(--bg);border-radius:10px;display:flex;align-items:center;justify-content:center"><i class="fas fa-shield-halved" style="color:var(--text-secondary);font-size:15px"></i></div>
+          <span style="flex:1;font-size:14px;font-weight:500;color:var(--text-primary)">Privacy & Security</span>
+          <i class="fas fa-chevron-right" style="font-size:12px;color:var(--text-muted)"></i>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;padding:14px 16px;cursor:pointer;border-bottom:1px solid var(--border)">
+          <div style="width:38px;height:38px;background:var(--bg);border-radius:10px;display:flex;align-items:center;justify-content:center"><i class="fas fa-circle-question" style="color:var(--text-secondary);font-size:15px"></i></div>
+          <span style="flex:1;font-size:14px;font-weight:500;color:var(--text-primary)">Help & Support</span>
+          <i class="fas fa-chevron-right" style="font-size:12px;color:var(--text-muted)"></i>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;padding:14px 16px;cursor:pointer">
+          <div style="width:38px;height:38px;background:var(--error-light);border-radius:10px;display:flex;align-items:center;justify-content:center"><i class="fas fa-right-from-bracket" style="color:var(--error);font-size:15px"></i></div>
+          <span style="flex:1;font-size:14px;font-weight:500;color:var(--error)">Log Out</span>
+        </div>
+      </div>
+      <p style="text-align:center;font-size:11px;color:var(--text-muted)">CityPulse v2.1.0 · Made with <i class="fas fa-heart" style="color:var(--error);font-size:10px"></i> for Mumbai</p>
+    </div>
+    <div class="tab-bar">
+      <div class="tab-item" onclick="switchTab('home')"><i class="fas fa-house"></i><span>Home</span></div>
+      <div class="tab-item" onclick="switchTab('transport')"><i class="fas fa-bus"></i><span>Transit</span></div>
+      <div class="tab-item" onclick="switchTab('services')"><i class="fas fa-grid-2"></i><span>Services</span></div>
+      <div class="tab-item" onclick="switchTab('community')"><i class="fas fa-people-group"></i><span>Community</span></div>
+      <div class="tab-item active" onclick="switchTab('profile')"><i class="fas fa-user"></i><span>Profile</span></div>
+    </div>
+  </div>
+
+  <!-- ==================== NOTIFICATIONS SCREEN ==================== -->
+  <div class="screen right" id="screen-notifications" style="background:var(--bg)">
+    <button class="nav-back" onclick="navigateTo('screen-home')"><i class="fas fa-arrow-left" style="font-size:14px;color:var(--text-primary)"></i></button>
+    <div class="nav-title">Notifications</div>
+    <div style="padding:90px 20px 20px">
+      <p style="font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:.5px">Today</p>
+      <div class="card" style="margin-bottom:10px;display:flex;gap:12px;padding:14px;border-left:4px solid var(--error)">
+        <div style="width:40px;height:40px;background:var(--error-light);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fas fa-triangle-exclamation" style="color:var(--error);font-size:15px"></i></div>
+        <div><p style="font-size:13px;font-weight:600;color:var(--text-primary)">Water Supply Disruption</p><p style="font-size:12px;color:var(--text-secondary);margin-top:2px">Andheri West area, 10 AM - 6 PM today</p><p style="font-size:11px;color:var(--text-muted);margin-top:4px">2 hours ago</p></div>
+      </div>
+      <div class="card" style="margin-bottom:10px;display:flex;gap:12px;padding:14px;border-left:4px solid var(--secondary)">
+        <div style="width:40px;height:40px;background:var(--secondary-light);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fas fa-check-circle" style="color:var(--secondary);font-size:15px"></i></div>
+        <div><p style="font-size:13px;font-weight:600;color:var(--text-primary)">Grievance Resolved</p><p style="font-size:12px;color:var(--text-secondary);margin-top:2px">Road repair near park has been completed</p><p style="font-size:11px;color:var(--text-muted);margin-top:4px">5 hours ago</p></div>
+      </div>
+      <div class="card" style="margin-bottom:20px;display:flex;gap:12px;padding:14px;border-left:4px solid var(--primary)">
+        <div style="width:40px;height:40px;background:var(--primary-light);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fas fa-calendar" style="color:var(--primary);font-size:15px"></i></div>
+        <div><p style="font-size:13px;font-weight:600;color:var(--text-primary)">Event Reminder</p><p style="font-size:12px;color:var(--text-secondary);margin-top:2px">Mumbai Jazz Festival tomorrow at 6 PM</p><p style="font-size:11px;color:var(--text-muted);margin-top:4px">8 hours ago</p></div>
+      </div>
+      <p style="font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:.5px">Yesterday</p>
+      <div class="card" style="margin-bottom:10px;display:flex;gap:12px;padding:14px;opacity:.7">
+        <div style="width:40px;height:40px;background:var(--bg);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fas fa-bolt" style="color:var(--warning);font-size:15px"></i></div>
+        <div><p style="font-size:13px;font-weight:600;color:var(--text-primary)">Bill Reminder</p><p style="font-size:12px;color:var(--text-secondary);margin-top:2px">Adani Electricity bill due in 3 days — ₹2,840</p><p style="font-size:11px;color:var(--text-muted);margin-top:4px">Yesterday, 9 AM</p></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- End phone-screen -->
+</div><!-- End phone-frame -->
+
+<script>
+// Screen navigation system
+let currentScreen = 'screen-splash';
+let screenHistory = ['screen-splash'];
+const tabScreens = ['screen-home','screen-transport','screen-govt-services','screen-community','screen-profile'];
+
+function navigateTo(screenId) {
+  const current = document.getElementById(currentScreen);
+  const target = document.getElementById(screenId);
+  if (!current || !target || currentScreen === screenId) return;
+
+  // Determine direction
+  const currentIdx = screenHistory.indexOf(currentScreen);
+  const isBack = screenHistory.length > 1 && screenHistory[screenHistory.length - 2] === screenId;
+
+  if (isBack) {
+    target.className = 'screen left';
+    screenHistory.pop();
+  } else {
+    target.className = 'screen right';
+    screenHistory.push(screenId);
+  }
+
+  // Force reflow
+  void target.offsetWidth;
+  current.className = isBack ? 'screen right' : 'screen left';
+  target.className = 'screen active';
+  currentScreen = screenId;
+
+  // Show screen label
+  showScreenLabel(screenId);
+
+  // Scroll target to top
+  target.scrollTop = 0;
+}
+
+function switchTab(tab) {
+  const screenMap = {home:'screen-home',transport:'screen-transport',services:'screen-govt-services',community:'screen-community',profile:'screen-profile'};
+  const targetId = screenMap[tab];
+  if (!targetId) return;
+
+  // Reset history for tab switches
+  screenHistory = [targetId];
+  const current = document.getElementById(currentScreen);
+  const target = document.getElementById(targetId);
+  if (!current || !target || currentScreen === targetId) return;
+
+  target.className = 'screen right';
+  void target.offsetWidth;
+  current.className = 'screen left';
+  target.className = 'screen active';
+  currentScreen = targetId;
+  target.scrollTop = 0;
+  showScreenLabel(targetId);
+}
+
+function showScreenLabel(screenId) {
+  const labels = {
+    'screen-splash':'Splash Screen','screen-onboarding1':'Onboarding — All Services','screen-onboarding2':'Onboarding — AI Assistant','screen-onboarding3':'Onboarding — Community',
+    'screen-login':'Login','screen-otp':'OTP Verification','screen-profile-setup':'Profile Setup',
+    'screen-home':'Home Dashboard','screen-transport':'Transport & Transit','screen-govt-services':'Government Services',
+    'screen-healthcare':'Healthcare','screen-sos':'Emergency SOS','screen-jobs':'Jobs & Employment',
+    'screen-events':'Events','screen-community':'Community','screen-bills':'Pay Bills',
+    'screen-shopping':'Shopping & Deals','screen-ai-assistant':'AI Assistant','screen-citizen-card':'Digital Citizen Card',
+    'screen-profile':'Profile & Settings','screen-notifications':'Notifications'
+  };
+  const label = document.getElementById('screenLabel');
+  label.textContent = labels[screenId] || screenId;
+  label.classList.add('show');
+  clearTimeout(label._timeout);
+  label._timeout = setTimeout(() => label.classList.remove('show'), 2000);
+}
+
+// Splash screen auto-advance
+setTimeout(() => {
+  const bar = document.getElementById('splashProgress');
+  if (bar) {
+    let w = 0;
+    const interval = setInterval(() => {
+      w += Math.random() * 15 + 5;
+      if (w >= 100) {w = 100; clearInterval(interval);
+        setTimeout(() => navigateTo('screen-onboarding1'), 400);
+      }
+      bar.style.width = w + '%';
+    }, 200);
+  }
+}, 500);
+
+// OTP Timer
+let otpSeconds = 28;
+const otpTimerEl = document.getElementById('otpTimer');
+if (otpTimerEl) {
+  const interval = setInterval(() => {
+    otpSeconds--;
+    if (otpSeconds <= 0) {clearInterval(interval); otpTimerEl.textContent = 'Resend'; otpTimerEl.style.color = 'var(--primary)'; otpTimerEl.style.cursor = 'pointer';}
+    else {const m = String(Math.floor(otpSeconds/60)).padStart(2,'0'); const s = String(otpSeconds%60).padStart(2,'0'); otpTimerEl.textContent = m+':'+s;}
+  }, 1000);
+}
+
+// Chip toggle behavior
+document.querySelectorAll('.chip').forEach(chip => {
+  chip.addEventListener('click', function() {
+    const siblings = this.parentElement.querySelectorAll('.chip');
+    siblings.forEach(s => s.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+
+// Profile language chips (multi-select within their group)
+document.querySelectorAll('#screen-profile-setup .chip').forEach(chip => {
+  chip.addEventListener('click', function(e) {
+    e.stopPropagation();
+    // For language row (first chip group in profile setup)
+  });
+});
+</script>
+</body>
+</html>
