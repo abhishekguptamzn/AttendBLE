@@ -2,13 +2,339 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Title here</title>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abhishek Gupta — Salesforce Team Lead</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
-hello hi abhi
 
+    <button id="printBtn" onclick="window.print()">
+        <i data-lucide="download" style="width:16px;height:16px"></i>
+        Download PDF
+    </button>
+
+    <div class="resume">
+
+        <!-- ===== SIDEBAR ===== -->
+        <aside class="sidebar">
+            <div class="sidebar-inner">
+
+                <!-- Avatar -->
+                <div class="avatar">
+                    <div class="avatar-circle">AG</div>
+                </div>
+
+                <!-- Contact -->
+                <div class="sidebar-section">
+                    <h3 class="sidebar-heading">Contact</h3>
+                    <div class="contact-list">
+                        <div class="contact-item">
+                            <div class="contact-icon"><i data-lucide="mail" style="width:14px;height:14px"></i></div>
+                            <span>abhishekguptamzn@gmail.com</span>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon"><i data-lucide="phone" style="width:14px;height:14px"></i></div>
+                            <span>+91-9058772333</span>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon"><i data-lucide="map-pin" style="width:14px;height:14px"></i></div>
+                            <span>Noida, Uttar Pradesh</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Skills -->
+                <div class="sidebar-section">
+                    <h3 class="sidebar-heading">Salesforce Skills</h3>
+                    <div class="skill-tags">
+                        <span class="tag">Apex</span>
+                        <span class="tag">LWC</span>
+                        <span class="tag">Aura</span>
+                        <span class="tag">SOQL</span>
+                        <span class="tag">SOSL</span>
+                        <span class="tag">Triggers</span>
+                        <span class="tag">Test Classes</span>
+                        <span class="tag">Flows</span>
+                        <span class="tag">Process Builder</span>
+                        <span class="tag">SFDX</span>
+                        <span class="tag">Sales Cloud</span>
+                        <span class="tag">Service Cloud</span>
+                        <span class="tag">Profiles & Roles</span>
+                        <span class="tag">API Integration</span>
+                        <span class="tag">Workbench</span>
+                        <span class="tag">SF Inspector</span>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3 class="sidebar-heading">Other Skills</h3>
+                    <div class="skill-tags">
+                        <span class="tag">Python</span>
+                        <span class="tag">JavaScript</span>
+                        <span class="tag">HTML / CSS</span>
+                        <span class="tag">Laravel</span>
+                        <span class="tag">REST API</span>
+                        <span class="tag">SOAP API</span>
+                        <span class="tag">SQL</span>
+                        <span class="tag">Git</span>
+                        <span class="tag">Bitbucket</span>
+                        <span class="tag">GitHub</span>
+                        <span class="tag">VS Code</span>
+                    </div>
+                </div>
+
+                <!-- Certifications -->
+                <div class="sidebar-section">
+                    <h3 class="sidebar-heading">Certifications</h3>
+                    <div class="cert-list">
+                        <div class="cert-card">
+                            <div class="cert-icon"><i data-lucide="award" style="width:16px;height:16px"></i></div>
+                            <div>
+                                <strong>Platform Developer – I</strong>
+                                <small>Salesforce Certified</small>
+                            </div>
+                        </div>
+                        <div class="cert-card">
+                            <div class="cert-icon"><i data-lucide="award" style="width:16px;height:16px"></i></div>
+                            <div>
+                                <strong>Salesforce Administrator</strong>
+                                <small>Salesforce Certified</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Other Info -->
+                <div class="sidebar-section">
+                    <h3 class="sidebar-heading">Other Info</h3>
+                    <div class="info-list">
+                        <div class="info-row">
+                            <span class="info-label">DOB</span>
+                            <span class="info-value">21st Jan 1997</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Languages</span>
+                            <span class="info-value">Hindi, English</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </aside>
+
+        <!-- ===== MAIN CONTENT ===== -->
+        <main class="main">
+
+            <!-- Name Banner -->
+            <div class="name-banner">
+                <div class="banner-bg"></div>
+                <div class="banner-content">
+                    <h1>Abhishek Gupta</h1>
+                    <div class="badge-row">
+                        <div class="title-badge">Salesforce Team Lead</div>
+                        <div class="experience-badge">8.5 Years Experience</div>
+                    </div>
+                    <p class="banner-sub">7+ Years in Salesforce CRM · PD1 & Admin Certified</p>
+                </div>
+            </div>
+
+            <!-- Summary -->
+            <section class="section">
+                <div class="section-header">
+                    <div class="section-icon"><i data-lucide="user" style="width:16px;height:16px"></i></div>
+                    <h2>Professional Summary</h2>
+                </div>
+                <p class="summary-text">
+                    Certified Salesforce Team Lead (PD1 & Admin) with <strong>8.5 years of total experience</strong> 
+                    and <strong>7 years in Salesforce.com CRM</strong>. Extensive experience automating complex 
+                    business processes using declarative features such as <strong>Apex, LWC, Aura, SOQL, Triggers, 
+                    and SFDX</strong>. Proficient in creating Roles, Profiles, Email Services, Page Layouts, 
+                    Workflow Alerts & Actions, Approval Workflows, and Third-Party API integrations.
+                </p>
+            </section>
+
+            <!-- Experience -->
+            <section class="section">
+                <div class="section-header">
+                    <div class="section-icon"><i data-lucide="briefcase" style="width:16px;height:16px"></i></div>
+                    <h2>Professional Experience</h2>
+                </div>
+
+                <div class="timeline">
+
+                    <!-- Job 1: Genpact -->
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-card">
+                            <div class="card-top">
+                                <div>
+                                    <h3>Software Engineer – Salesforce Team Lead</h3>
+                                    <p class="company">Genpact · Sector 59, Noida</p>
+                                </div>
+                                <span class="date-pill">Jul 2024 – Present</span>
+                            </div>
+                            <div class="project-label">
+                                <i data-lucide="folder-open" style="width:13px;height:13px"></i>
+                                <span>MatchMaker — Salesforce Internal Application</span>
+                            </div>
+                            <p class="project-desc">
+                                MatchMaker is an internal Salesforce-based application designed to optimize 
+                                employee-job alignment. It intelligently matches employees with suitable roles 
+                                based on skills, experience, and availability. Integrates with HRMS (Microsoft 
+                                Office) via APIs for centralized data synchronization.
+                            </p>
+                            <ul>
+                                <li>Lead a <strong>5-member Salesforce team</strong> — task allocation, code reviews, and adherence to best practices.</li>
+                                <li>Conducted requirement gathering sessions, translating business needs into scalable technical requirements.</li>
+                                <li>Integrated Salesforce with HRMS using <strong>REST APIs</strong> for employee data sync and job alignment records.</li>
+                                <li>Implemented <strong>Flows, Process Builder, Approval Processes</strong> to automate recruitment workflows and internal transfers.</li>
+                                <li>Built scenario-based triggers for job match alerts, skill-gap notifications, and onboarding reminders.</li>
+                                <li>Created custom reports and dashboards for HR to monitor skill-job mapping, retention trends, and project allocation.</li>
+                                <li>Defined data security architecture using profiles, permission sets, and sharing rules with audit records.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Job 2: Virtual Employee -->
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-card">
+                            <div class="card-top">
+                                <div>
+                                    <h3>Software Engineer – Salesforce Dev Team Lead</h3>
+                                    <p class="company">Virtual Employee Pvt Ltd · NSEZ, Noida</p>
+                                </div>
+                                <span class="date-pill">Jun 2021 – Jul 2023</span>
+                            </div>
+                            <div class="project-label">
+                                <i data-lucide="folder-open" style="width:13px;height:13px"></i>
+                                <span>Gold Rush Energy Solution — Salesforce</span>
+                            </div>
+                            <p class="project-desc">
+                                Gold Rush Energy is a renewable energy company specializing in solar energy 
+                                solutions for residential, commercial, and agricultural clients in California.
+                            </p>
+                            <ul>
+                                <li>Handled Salesforce administration — Roles, Profiles, Email Services, Page Layouts, Workflow Alerts, Approval Workflows, Apex, Aura, LWC, SOQL, Triggers, and SFDX.</li>
+                                <li>Integrated <strong>QuickBooks Online</strong> via APIs for seamless financial data sync — purchase orders, bills, estimates, invoices, and reports.</li>
+                                <li>Integrated <strong>DocuSign</strong> using APIs for document generation and e-signing; signed contracts automatically convert Leads to Opportunities.</li>
+                                <li>Resulted in increased operational efficiency, improved data accuracy, and enhanced client experience.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Job 3: CSC -->
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-card">
+                            <div class="card-top">
+                                <div>
+                                    <h3>Software Engineer</h3>
+                                    <p class="company">CSC E-Governance Services India Ltd · New Delhi</p>
+                                </div>
+                                <span class="date-pill">Jan 2020 – Jan 2021</span>
+                            </div>
+                            <div class="project-label">
+                                <i data-lucide="folder-open" style="width:13px;height:13px"></i>
+                                <span>ICDS UP — Laravel</span>
+                            </div>
+                            <p class="project-desc">
+                                Integrated Child Development Services Uttar Pradesh — a government program 
+                                improving health, nutrition, and development of children and mothers through 
+                                Anganwadi Centers.
+                            </p>
+                            <ul>
+                                <li>Developed and maintained web applications using the <strong>Laravel PHP framework</strong>.</li>
+                                <li>Implemented user authentication and authorization with role-based access for beneficiaries, Anganwadi workers, and admins across state, district, sector, and zone levels.</li>
+                                <li>Built modules for user management, Ration & Recipe Management, and Demand Generation to Food Suppliers.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Job 4: Adityay Technosys -->
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-card">
+                            <div class="card-top">
+                                <div>
+                                    <h3>Software Engineer</h3>
+                                    <p class="company">Adityay Technosys Pvt Ltd · Sector 63, Noida</p>
+                                </div>
+                                <span class="date-pill">Dec 2018 – Dec 2019</span>
+                            </div>
+                            <div class="project-label">
+                                <i data-lucide="folder-open" style="width:13px;height:13px"></i>
+                                <span>REZB2B — Salesforce</span>
+                            </div>
+                            <p class="project-desc">
+                                An online travel platform offering tour packages and travel services to 
+                                customers worldwide.
+                            </p>
+                            <ul>
+                                <li>Designed, developed, and customized Salesforce applications, objects, and processes for the travel business.</li>
+                                <li>Captured customer details, travel preferences, and booking requirements from the online platform.</li>
+                                <li>Built tour inventory modules — destinations, itineraries, accommodations, transportation, and activities.</li>
+                                <li>Implemented dynamic tour price calculation based on duration, inclusions, group size, and additional services with invoice generation.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Job 5: Non-Stop -->
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-card">
+                            <div class="card-top">
+                                <div>
+                                    <h3>Software Engineer</h3>
+                                    <p class="company">Company Non-Stop Pvt Ltd · Sector 62, Noida</p>
+                                </div>
+                                <span class="date-pill">Dec 2016 – May 2019</span>
+                            </div>
+                            <div class="project-label">
+                                <i data-lucide="folder-open" style="width:13px;height:13px"></i>
+                                <span>Insuregent — Salesforce</span>
+                            </div>
+                            <p class="project-desc">
+                                An online platform offering a wide range of insurance packages and policy 
+                                services to customers worldwide.
+                            </p>
+                            <ul>
+                                <li>Designed and customized Salesforce applications, objects, and Process Builders for the insurance application.</li>
+                                <li>Developed automated email notifications and reminders for various insurance processes.</li>
+                                <li>Built user-friendly interfaces for customer registration and profile management.</li>
+                                <li>Implemented automated quote generation and policy customization based on customer inputs.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Education -->
+            <section class="section">
+                <div class="section-header">
+                    <div class="section-icon"><i data-lucide="graduation-cap" style="width:16px;height:16px"></i></div>
+                    <h2>Education</h2>
+                </div>
+                <div class="edu-card">
+                    <div>
+                        <h3>MCA — Master of Computer Application</h3>
+                        <p class="company">Lovely Professional University, Phagwara, Punjab</p>
+                    </div>
+                    <span class="date-pill">2020 – 2022</span>
+                </div>
+            </section>
+
+            <footer class="main-footer">
+                <span>References available upon request</span>
+            </footer>
+
+        </main>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
